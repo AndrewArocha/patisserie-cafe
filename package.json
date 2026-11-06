@@ -1,0 +1,28 @@
+{
+  "name": "patisserie-cafe",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "concurrently -k -n api,web -c yellow,cyan \"npm:dev:server\" \"npm:dev:client\"",
+    "dev:server": "npm run dev --prefix server",
+    "dev:client": "npm run dev --prefix client",
+    "build": "npm run build --prefix server && npm run build --prefix client",
+    "start": "npm run start --prefix server",
+    "lint": "eslint client/src server/src",
+    "format": "prettier --write \"package.json\" \"eslint.config.js\" \".prettierrc.json\" \"README.md\" \"client/**/*.{json,ts,tsx,css,html}\" \"server/**/*.{json,ts}\"",
+    "format:check": "prettier --check \"package.json\" \"eslint.config.js\" \".prettierrc.json\" \"README.md\" \"client/**/*.{json,ts,tsx,css,html}\" \"server/**/*.{json,ts}\"",
+    "install:all": "npm install && npm install --prefix server && npm install --prefix client"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "concurrently": "^9.2.1",
+    "eslint": "^10.14.0",
+    "globals": "^16.5.0",
+    "typescript-eslint": "^8.72.1",
+    "prettier": "^3.6.2"
+  },
+  "overrides": {
+    "minimatch": "^11.0.5"
+  }
+}

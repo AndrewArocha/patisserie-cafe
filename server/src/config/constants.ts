@@ -1,0 +1,87 @@
+export const APPLICATION_NAME = "Patisserie Café API";
+export const DEFAULT_PORT = 4000;
+export const DEFAULT_PASSWORD_MIN_LENGTH = 10;
+export const DEFAULT_JWT_EXPIRY = "2h";
+export const MAX_DATABASE_POOL_SIZE = 10;
+export const API_PREFIX = "/api";
+
+export const HTTP_MESSAGES = {
+  badRequest: "Please check the submitted information and try again.",
+  unauthorized: "Your session is not valid. Please sign in again.",
+  forbidden: "You do not have access to this record.",
+  notFound: "The requested resource could not be found.",
+  routeNotFound: "This API route does not exist.",
+  conflict: "An account with this email already exists.",
+  serverError: "Something went wrong. Please try again.",
+  rateLimit: "Too many attempts. Please wait a moment and try again.",
+  paymentUnavailable: "Online payment is not available right now.",
+  accountNotFound: "Your account could not be found.",
+  accountDeleted: "Your account and its order records have been deleted.",
+  orderNotFound: "This order could not be found.",
+  orderIdInvalid: "Please check the order ID and try again.",
+  orderItemsUnavailable: "One or more selected menu items are unavailable.",
+  checkoutItemUnavailable: "This order contains an unavailable menu item.",
+  orderAccessForbidden: "You do not have access to this order.",
+  paidOrderDelete: "A paid order cannot be deleted online. Please call the café for help.",
+  orderAlreadyPaid: "This order has already been paid.",
+  checkoutSessionNotFound: "This checkout session could not be found.",
+  checkoutSessionInvalid: "Please check the checkout session and try again.",
+  orderDeleted: "Your order has been removed.",
+  badRequestFallback: "Please check the submitted information.",
+} as const;
+
+export const MENU_CATALOG = {
+  breakfast_small: { name: "Breakfast basket · small (serves 10)", priceCents: 11950, minimum: 1 },
+  breakfast_medium: { name: "Breakfast basket · medium (serves 20)", priceCents: 23950, minimum: 1 },
+  breakfast_large: { name: "Breakfast basket · large (serves 25)", priceCents: 30350, minimum: 1 },
+  breakfast_package_small: { name: "Breakfast package · small (serves 10)", priceCents: 21450, minimum: 1 },
+  breakfast_package_medium: { name: "Breakfast package · medium (serves 20)", priceCents: 36950, minimum: 1 },
+  breakfast_package_large: { name: "Breakfast package · large (serves 25)", priceCents: 41950, minimum: 1 },
+  lunch_small: { name: "Patisserie lunch · small (serves 10)", priceCents: 25450, minimum: 1 },
+  lunch_medium: { name: "Patisserie lunch · medium (serves 20)", priceCents: 36450, minimum: 1 },
+  lunch_large: { name: "Patisserie lunch · large (serves 25)", priceCents: 42950, minimum: 1 },
+  assorted_bagels: { name: "Bagels & house-made spreads · small (serves 10)", priceCents: 7950, minimum: 1 },
+  bagels_medium: { name: "Bagels & spreads · medium (serves 20)", priceCents: 12950, minimum: 1 },
+  bagels_large: { name: "Bagels & spreads · large (serves 25)", priceCents: 14950, minimum: 1 },
+  fish_plate: { name: "The fish plate · small (serves 10)", priceCents: 12450, minimum: 1 },
+  fish_plate_medium: { name: "The fish plate · medium (serves 20)", priceCents: 24550, minimum: 1 },
+  fish_plate_large: { name: "The fish plate · large (serves 25)", priceCents: 29450, minimum: 1 },
+  seasonal_fruit_medium: { name: "Seasonal fruit · medium (serves 20)", priceCents: 17950, minimum: 1 },
+  seasonal_fruit_large: { name: "Seasonal fruit · large (serves 25)", priceCents: 21950, minimum: 1 },
+  artisanal_cheese: { name: "Artisanal cheeses · small (serves 10)", priceCents: 16550, minimum: 1 },
+  artisanal_cheese_medium: { name: "Artisanal cheeses · medium (serves 20)", priceCents: 20950, minimum: 1 },
+  artisanal_cheese_large: { name: "Artisanal cheeses · large (serves 25)", priceCents: 26550, minimum: 1 },
+  roasted_vegetables: { name: "Roasted vegetables · small (serves 10)", priceCents: 13950, minimum: 1 },
+  roasted_vegetables_medium: {
+    name: "Roasted vegetables · medium (serves 20)",
+    priceCents: 19550,
+    minimum: 1,
+  },
+  roasted_vegetables_large: { name: "Roasted vegetables · large (serves 25)", priceCents: 24550, minimum: 1 },
+  crudites: { name: "Market crudités · small (serves 10)", priceCents: 12950, minimum: 1 },
+  crudites_medium: { name: "Market crudités · medium (serves 20)", priceCents: 19950, minimum: 1 },
+  crudites_large: { name: "Market crudités · large (serves 25)", priceCents: 25550, minimum: 1 },
+  sandwiches: { name: "Assorted sandwiches (per person)", priceCents: 1695, minimum: 10 },
+  sandwich_avocado: { name: "Avocado toast (per person)", priceCents: 1695, minimum: 10 },
+  sandwich_caprese: { name: "Caprese sandwich (per person)", priceCents: 1695, minimum: 10 },
+  sandwich_tunisian_tuna: { name: "Tunisian tuna sandwich (per person)", priceCents: 1695, minimum: 10 },
+  sandwich_athens: { name: "Athens sandwich (per person)", priceCents: 1695, minimum: 10 },
+  frittata: { name: "Garden frittata (per person)", priceCents: 595, minimum: 12 },
+  quiche: { name: "Quiche (mini)", priceCents: 795, minimum: 12 },
+  quiche_large: { name: "Quiche (large)", priceCents: 3695, minimum: 4 },
+  deviled_eggs: { name: "Deviled eggs", priceCents: 395, minimum: 12 },
+  roasted_potatoes: { name: "Roasted potatoes (per person)", priceCents: 795, minimum: 12 },
+  sweet_potatoes: { name: "Roasted sweet potatoes (per person)", priceCents: 795, minimum: 12 },
+  green_beans: { name: "Sautéed green beans (per person)", priceCents: 795, minimum: 12 },
+  stuffed_mushrooms: { name: "Stuffed mushrooms (per person)", priceCents: 1395, minimum: 12 },
+  pasta_salad: { name: "Pasta salad (per person)", priceCents: 495, minimum: 12 },
+  seasonal_fruit: { name: "Seasonal fresh fruit · small (serves 10)", priceCents: 10950, minimum: 1 },
+} as const;
+
+export const ERROR_MESSAGES = {
+  invalidCredentials: "Email or password is incorrect.",
+  passwordTooShort: (minimum: number) => `Password must be at least ${minimum} characters long.`,
+  orderMinimum: (name: string, minimum: number) => `${name} requires a minimum quantity of ${minimum}.`,
+  stripeMissing: "Online payment is being set up. Please call the café to place your order.",
+  invalidEnvironment: "Server environment configuration is invalid.",
+} as const;
