@@ -18,6 +18,15 @@ const environmentSchema = z.object({
   STRIPE_SECRET_KEY: z.string().optional(),
   STRIPE_SUCCESS_URL: z.string().url().default("http://localhost:5173/order?checkout=success"),
   STRIPE_CANCEL_URL: z.string().url().default("http://localhost:5173/order?checkout=cancel"),
+  SMTP_HOST: z.string().optional(),
+  SMTP_PORT: z.coerce.number().int().positive().default(587),
+  SMTP_SECURE: z
+    .string()
+    .default("false")
+    .transform((value) => value.toLowerCase() === "true"),
+  SMTP_USER: z.string().optional(),
+  SMTP_PASS: z.string().optional(),
+  SMTP_FROM: z.string().email().default("contact@patisseriecafe.co"),
 });
 
 const parsedEnvironment = environmentSchema.safeParse(process.env);

@@ -2,6 +2,7 @@ export const APPLICATION_NAME = "Patisserie Café API";
 export const DEFAULT_PORT = 4000;
 export const DEFAULT_PASSWORD_MIN_LENGTH = 10;
 export const DEFAULT_JWT_EXPIRY = "2h";
+export const PASSWORD_RESET_TTL_MS = 30 * 60 * 1000;
 export const MAX_DATABASE_POOL_SIZE = 10;
 export const API_PREFIX = "/api";
 
@@ -28,6 +29,10 @@ export const HTTP_MESSAGES = {
   checkoutSessionInvalid: "Please check the checkout session and try again.",
   orderDeleted: "Your order has been removed.",
   badRequestFallback: "Please check the submitted information.",
+  passwordResetAccepted: "If an account exists for that email, we’ll send a password reset link shortly.",
+  passwordResetUnavailable: "Password reset email isn’t available right now. Please call the café for help.",
+  passwordResetInvalid: "This reset link is invalid or expired. Request a new one.",
+  passwordResetComplete: "Your password has been changed. Please sign in with your new password.",
 } as const;
 
 export const MENU_CATALOG = {
@@ -84,4 +89,5 @@ export const ERROR_MESSAGES = {
   orderMinimum: (name: string, minimum: number) => `${name} requires a minimum quantity of ${minimum}.`,
   stripeMissing: "Online payment is being set up. Please call the café to place your order.",
   invalidEnvironment: "Server environment configuration is invalid.",
+  passwordResetEmailSubject: "Reset your Patisserie Café password",
 } as const;

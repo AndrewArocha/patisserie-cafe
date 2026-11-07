@@ -17,8 +17,8 @@ export function ContactPage() {
         </div>
         <div className="contact-image">
           <img
-            src="/images/caprese-salad.png"
-            alt="Freshly prepared café salad with tomato, mozzarella and basil"
+            src="/images/patis-bakery/margherita-pizza.jpg"
+            alt="Freshly baked Margherita pizza with tomato, mozzarella, and basil"
           />
           <span className="contact-image-caption">A seat at the table, always.</span>
         </div>
@@ -49,6 +49,15 @@ export function ContactPage() {
           <p>For catering questions, larger gatherings, or just to say hello.</p>
           <a className="contact-phone" href="tel:+16464498730">
             (646) 449-8730
+          </a>
+        </div>
+        <div className="contact-card contact-email-card">
+          <span className="contact-icon">✉</span>
+          <p className="eyebrow">Send us a note</p>
+          <h2>We’re listening.</h2>
+          <p>Questions about the menu, an order, or an upcoming gathering?</p>
+          <a className="contact-phone" href="mailto:contact@patisseriecafe.co">
+            contact@patisseriecafe.co
           </a>
         </div>
         <div className="contact-map">

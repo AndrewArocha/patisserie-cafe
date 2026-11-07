@@ -56,6 +56,16 @@ export const api = {
     }),
   signIn: (email: string, password: string) =>
     request<AuthResponse>("/auth/signin", { method: "POST", body: JSON.stringify({ email, password }) }),
+  requestPasswordReset: (email: string) =>
+    request<{ message: string }>("/auth/forgot-password", {
+      method: "POST",
+      body: JSON.stringify({ email }),
+    }),
+  resetPassword: (token: string, password: string) =>
+    request<{ message: string }>("/auth/reset-password", {
+      method: "POST",
+      body: JSON.stringify({ token, password }),
+    }),
   currentUser: () => request<UserResponse>("/users/me"),
   deleteAccount: () => request<{ message: string }>("/users/me", { method: "DELETE" }),
   orders: () => request<{ orders: ApiOrder[] }>("/orders"),

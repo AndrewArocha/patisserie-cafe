@@ -12,6 +12,8 @@ A React and TypeScript storefront for Patisserie Café at 676 Amsterdam Ave, New
 
 From this folder, install dependencies for the root tools and both apps, then copy `server/.env.example` to `server/.env`. Set `MONGODB_URI`, a long random `JWT_SECRET` (32+ characters), and `CLIENT_ORIGIN`. Set `STRIPE_SECRET_KEY` to enable hosted checkout. Enable Stripe Tax and register the applicable tax locations in Stripe before accepting live payments; checkout collects a billing address and asks Stripe Tax to calculate applicable tax. Set `VITE_API_URL` in `client/.env` when the API is not at `http://localhost:4000/api`.
 
+For production, set `CLIENT_ORIGIN=https://www.patisseriecafe.co` in Render and set `VITE_API_URL` to the deployed Render API URL ending in `/api` in Vercel before building. Password reset email needs outbound SMTP settings in Render: `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, and `SMTP_PASS`. The sender defaults to `contact@patisseriecafe.co` (`SMTP_FROM`). The custom-domain forwarding address receives mail; it does not by itself provide outbound SMTP credentials. Use credentials from the email provider and store them as Render secrets.
+
 ```sh
 npm run install:all
 npm run dev
@@ -30,6 +32,7 @@ For production, serve the built client (`client/dist`) from a static host and se
 
 - `GET /api/health` — stable public status
 - `POST /api/auth/signup`, `POST /api/auth/signin` — public, rate limited
+- `POST /api/auth/forgot-password`, `POST /api/auth/reset-password` — public, rate limited; reset tokens expire after 30 minutes and are stored hashed
 - `GET /api/users/me`, `DELETE /api/users/me` — authenticated current account
 - `GET /api/orders`, `POST /api/orders`, `DELETE /api/orders/:id` — authenticated owner-scoped orders
 - `POST /api/payments/checkout` — authenticated Stripe Checkout session

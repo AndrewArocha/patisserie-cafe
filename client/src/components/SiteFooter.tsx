@@ -26,7 +26,8 @@ export function SiteFooter() {
         <div>
           <span className="footer-label">Say bonjour</span>
           <a href="tel:+16464498730">(646) 449-8730</a>
-          <a href="/contact">Get directions</a>
+          <a href="mailto:contact@patisseriecafe.co">contact@patisseriecafe.co</a>
+          <Link to="/contact">Get directions</Link>
         </div>
         <div>
           <span className="footer-label">Explore</span>
@@ -36,7 +37,7 @@ export function SiteFooter() {
       </div>
       <div className="footer-bottom">
         <span>© {new Date().getFullYear()} Patisserie Café</span>
-        <span>Made fresh every morning in New York</span>
+        <span>100% Kosher · Certified by Tartikov</span>
         <span>Sales tax and delivery fees may apply.</span>
       </div>
     </footer>

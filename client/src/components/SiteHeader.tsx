@@ -7,7 +7,7 @@ import { StatusMessage } from "./StatusMessage";
 const navItems = [
   { label: "Our menu", to: "/menu" },
   { label: "Catering", to: "/menu#catering" },
-  { label: "Visit us", to: "/contact" },
+  { label: "Contact us", to: "/contact" },
 ];
 
 export function SiteHeader() {
@@ -21,7 +21,7 @@ export function SiteHeader() {
     <header className="site-header">
       <div className="top-note">
         <span>New York · Upper West Side</span>
-        <span>Handmade with care, fresh every morning</span>
+        <span>100% Kosher · Tartikov supervised</span>
         <a href="tel:+16464498730">(646) 449-8730</a>
       </div>
       <div className="nav-wrap">

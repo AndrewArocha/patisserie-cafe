@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { LoadingState, StatusMessage } from "../components/StatusMessage";
 import { useCurrentUser } from "../context/CurrentUserContext";
 import { api } from "../lib/api";
@@ -21,6 +21,8 @@ export function AccountPage() {
   const [deletingOrderId, setDeletingOrderId] = useState<string | null>(null);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const resetMessage = (location.state as { message?: string } | null)?.message ?? "";
 
   useEffect(() => {
     if (!currentUser) return;
@@ -125,8 +127,8 @@ export function AccountPage() {
             Sign out <span>→</span>
           </button>
         </div>
-        {(message || sessionMessage) && (
-          <StatusMessage kind="success">{message || sessionMessage}</StatusMessage>
+        {(message || sessionMessage || resetMessage) && (
+          <StatusMessage kind="success">{message || sessionMessage || resetMessage}</StatusMessage>
         )}
         <section className="account-panel">
           <div className="account-panel-heading">
@@ -252,7 +254,10 @@ export function AccountPage() {
   return (
     <main className="account-page account-login-page section-pad">
       <div className="account-login-art">
-        <img src="/images/croissant-sandwich.png" alt="Croissant sandwich with crisp greens" />
+        <img
+          src="/images/patis-bakery/lox-croissant-sandwich.jpeg"
+          alt="Croissant sandwich with lox, avocado, and fresh sprouts"
+        />
         <span className="account-art-note">
           a little treat
           <br />
@@ -313,6 +318,11 @@ export function AccountPage() {
             onChange={(event) => setPassword(event.target.value)}
             placeholder={isSignUp ? "At least 10 characters" : "Your password"}
           />
+          {!isSignUp && (
+            <Link className="forgot-password-link" to="/forgot-password">
+              Forgot password?
+            </Link>
+          )}
           {isSubmitting && <LoadingState label={isSignUp ? "Setting up your account…" : "Signing you in…"} />}
           <button className="button button-navy account-submit" disabled={isSubmitting}>
             {isSubmitting ? "One moment…" : isSignUp ? "Create my account" : "Sign in"}

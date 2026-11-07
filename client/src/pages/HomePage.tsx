@@ -53,8 +53,8 @@ export function HomePage() {
         <div className="hero-art">
           <div className="hero-image-wrap">
             <img
-              src="/images/croissant-sandwich.png"
-              alt="Golden croissant sandwich served with fresh greens"
+              src="/images/patis-bakery/signature-croissant.jpeg"
+              alt="Freshly baked golden signature croissant"
             />
           </div>
           <div className="hero-stamp">
@@ -91,8 +91,8 @@ export function HomePage() {
       <section className="intro-section section-pad">
         <div className="intro-image">
           <img
-            src="/images/soup-flatbread.png"
-            alt="Freshly baked flatbread and a warm bowl of tomato soup"
+            src="/images/patis-bakery/lox-croissant-sandwich.jpeg"
+            alt="Croissant sandwich with lox, avocado, and fresh sprouts"
           />
           <span className="image-label">Lunch, lingered over</span>
         </div>
@@ -115,6 +115,82 @@ export function HomePage() {
           </Link>
         </div>
         <span className="intro-flower">✿</span>
+      </section>
+
+      <section className="kosher-section section-pad">
+        <div className="kosher-copy">
+          <p className="eyebrow">
+            <span className="eyebrow-rule" /> Made with care, under supervision
+          </p>
+          <h2>
+            100% <em>Kosher.</em>
+          </h2>
+          <p>Our café is kosher certified by Tartikov and operates under strict rabbinical supervision.</p>
+          <p className="kosher-practices">Pas Yisroel · Cholov Yisroel · Yoshon</p>
+          <a
+            className="text-arrow text-arrow-coral"
+            href="/images/patis-bakery/tartikov-kosher-certificate.jpg"
+            target="_blank"
+            rel="noreferrer"
+          >
+            View our kosher certificate <span>↗</span>
+          </a>
+        </div>
+        <a
+          className="kosher-certificate"
+          href="/images/patis-bakery/tartikov-kosher-certificate.jpg"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Open kosher certification from Tartikov"
+        >
+          <img
+            src="/images/patis-bakery/tartikov-kosher-certificate.jpg"
+            alt="Tartikov kosher certificate"
+            loading="lazy"
+          />
+        </a>
+      </section>
+
+      <section className="photo-story section-pad" aria-label="A taste of Patis Bakery">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">
+              <span className="eyebrow-rule" /> From our neighborhood bakery
+            </p>
+            <h2>
+              A few things <em>we love.</em>
+            </h2>
+          </div>
+          <Link className="text-arrow" to="/menu">
+            Browse our menu <span>→</span>
+          </Link>
+        </div>
+        <div className="photo-story-grid">
+          <figure>
+            <img
+              src="/images/patis-bakery/almond-croissant.jpeg"
+              alt="Golden almond croissant"
+              loading="lazy"
+            />
+            <figcaption>Almond croissant</figcaption>
+          </figure>
+          <figure>
+            <img
+              src="/images/patis-bakery/blueberry-danish.jpeg"
+              alt="Fresh blueberry Danish"
+              loading="lazy"
+            />
+            <figcaption>Blueberry Danish</figcaption>
+          </figure>
+          <figure>
+            <img
+              src="/images/patis-bakery/wild-mushroom-panini.jpeg"
+              alt="Wild mushroom panini"
+              loading="lazy"
+            />
+            <figcaption>Wild mushroom panini</figcaption>
+          </figure>
+        </div>
       </section>
 
       <section className="favorites-section section-pad">
@@ -164,7 +240,7 @@ export function HomePage() {
 
       <section className="catering-banner">
         <div className="catering-art">
-          <img src="/images/caprese-salad.png" alt="A colorful fresh tomato and mozzarella salad" />
+          <img src="/images/patis-bakery/margherita-pizza.jpg" alt="Freshly baked Margherita pizza" />
           <span>
             made for
             <br />
