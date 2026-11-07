@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { StatusMessage } from "../components/StatusMessage";
 import { useCart } from "../context/CartContext";
-import { categories, MENU_ITEMS, money } from "../lib/menu";
+import { categories, MENU_ITEMS, MENU_ITEM_IMAGES, money } from "../lib/menu";
 
 export function MenuPage() {
   const [category, setCategory] = useState<string>("All");
@@ -73,18 +73,11 @@ export function MenuPage() {
               transition={{ delay: Math.min(index * 0.035, 0.22) }}
             >
               <div className="menu-card-image">
-                {item.image ? (
-                  <img src={item.image} alt={item.name} loading="lazy" />
-                ) : (
-                  <div className={`menu-placeholder menu-placeholder-${index % 4}`}>
-                    <span>✳</span>
-                    <small>
-                      PATISSERIE
-                      <br />
-                      CAFÉ
-                    </small>
-                  </div>
-                )}
+                <img
+                  src={MENU_ITEM_IMAGES[item.id] ?? item.image}
+                  alt={`${item.name}: ${item.description}`}
+                  loading="lazy"
+                />
                 {item.tag && <span className="menu-tag">{item.tag}</span>}
               </div>
               <div className="menu-card-body">
