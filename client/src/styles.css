@@ -46,7 +46,9 @@
 
 :root {
   font-family: "Source Sans Pro", sans-serif;
-  font-size: 16px;
+  --type-small: 0.875rem;
+  --type-standard: 1rem;
+  --type-reading: 1.125rem;
   color: #1b2d45;
   background: #fbf8f3;
   font-synthesis: none;
@@ -96,9 +98,11 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 8px 16px;
+  flex-wrap: wrap;
   border-bottom: 1px solid #e9e1d8;
   color: #7d7a75;
-  font-size: 9px;
+  font-size: 0.75rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -107,7 +111,7 @@ button {
   font-weight: 700;
 }
 .nav-wrap {
-  height: 82px;
+  min-height: 82px;
   padding: 0 5.1%;
   display: flex;
   align-items: center;
@@ -136,11 +140,11 @@ button {
 .brand-lockup strong {
   font-family: "Playfair Display", serif;
   letter-spacing: 0.23em;
-  font-size: 14px;
+  font-size: var(--type-standard);
   font-weight: 600;
 }
 .brand-lockup small {
-  font-size: 6px;
+  font-size: 0.75rem;
   letter-spacing: 0.27em;
 }
 .main-nav {
@@ -149,7 +153,7 @@ button {
   gap: clamp(22px, 3vw, 46px);
 }
 .nav-link {
-  font-size: 13px;
+  font-size: var(--type-standard);
   letter-spacing: 0.035em;
   color: #354356;
   transition: color 0.2s ease;
@@ -173,7 +177,7 @@ button {
   padding: 0 23px;
   border: 1px solid transparent;
   border-radius: 2px;
-  font-size: 12px;
+  font-size: var(--type-standard);
   font-weight: 600;
   letter-spacing: 0.045em;
   transition:
@@ -207,16 +211,17 @@ button {
   min-height: 42px;
   padding: 0 15px;
   gap: 10px;
-  font-size: 9px;
+  font-size: 0.875rem;
 }
 .cart-badge {
-  min-width: 19px;
-  height: 19px;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  padding: 0 0.25rem;
   display: grid;
   place-items: center;
-  border-radius: 50%;
+  border-radius: 1rem;
   background: rgba(255, 255, 255, 0.15);
-  font-size: 9px;
+  font-size: 0.875rem;
 }
 .mobile-menu-button {
   display: none;
@@ -256,7 +261,7 @@ button {
   align-items: center;
   gap: 11px;
   color: #c67560;
-  font-size: 9px;
+  font-size: var(--type-small);
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -295,19 +300,20 @@ h2 em {
   max-width: 400px;
   margin: 25px 0 27px;
   color: #686c6d;
-  font-size: 15px;
+  font-size: var(--type-reading);
   line-height: 1.9;
 }
 .hero-actions {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 28px;
 }
 .text-arrow {
   display: inline-flex;
   align-items: center;
   gap: 13px;
-  font-size: 10px;
+  font-size: var(--type-standard);
   font-weight: 600;
   letter-spacing: 0.035em;
   transition: gap 0.18s ease;
@@ -325,7 +331,7 @@ h2 em {
 .hero-footnote {
   margin-top: 69px;
   color: #827f7a;
-  font-size: 9px;
+  font-size: var(--type-small);
   letter-spacing: 0.05em;
 }
 .tiny-spark {
@@ -381,14 +387,14 @@ h2 em {
   font-weight: 400;
 }
 .hero-stamp span {
-  font-size: 13px;
+  font-size: 0.875rem;
 }
 .hero-side-note {
   position: absolute;
   right: 2px;
   top: 112px;
   color: #c3715c;
-  font-size: 7px;
+  font-size: 0.75rem;
   letter-spacing: 0.21em;
   line-height: 1.8;
   writing-mode: vertical-rl;
@@ -397,16 +403,18 @@ h2 em {
   position: absolute;
   bottom: 0;
   right: 18px;
-  width: 190px;
+  width: max-content;
+  max-width: calc(100% - 18px);
   min-height: 56px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 17px;
+  gap: 12px;
+  padding: 8px 17px;
   background: #fffdf9;
   color: #76706a;
   font-family: "Playfair Display", serif;
-  font-size: 12px;
+  font-size: var(--type-small);
   font-style: italic;
   box-shadow: 0 6px 18px rgba(47, 38, 29, 0.1);
 }
@@ -430,17 +438,17 @@ h2 em {
   font-size: 25px;
 }
 .marquee-strip {
-  height: 44px;
+  min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: space-evenly;
-  gap: 20px;
-  padding: 0 4%;
-  overflow: hidden;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  padding: 8px 4%;
   background: #1d3048;
   color: #f9f4ed;
   font-family: "Playfair Display", serif;
-  font-size: 12px;
+  font-size: var(--type-small);
   font-style: italic;
   white-space: nowrap;
 }
@@ -478,7 +486,7 @@ h2 em {
   background: #fcf9f4;
   color: #6c6864;
   font-family: "Playfair Display", serif;
-  font-size: 12px;
+  font-size: var(--type-small);
   font-style: italic;
   box-shadow: 0 4px 15px rgba(40, 31, 20, 0.08);
 }
@@ -501,7 +509,7 @@ h2 em {
 }
 .intro-copy > p:not(.eyebrow) {
   color: #6f716e;
-  font-size: 14px;
+  font-size: var(--type-reading);
   line-height: 1.9;
 }
 .intro-copy .text-arrow {
@@ -590,24 +598,24 @@ h2 em {
   margin: 0 0 3px;
   color: #1d3048;
   font-family: "Playfair Display", serif;
-  font-size: 18px;
+  font-size: 1.25rem;
   font-weight: 500;
 }
 .favorite-meta p,
 .favorite-description {
   margin-bottom: 0;
   color: #8a827b;
-  font-size: 9px;
+  font-size: var(--type-small);
   letter-spacing: 0.05em;
 }
 .favorite-meta > strong {
   color: #c36c57;
-  font-size: 13px;
+  font-size: var(--type-standard);
   white-space: nowrap;
 }
 .favorite-description {
   color: #73716d;
-  font-size: 12px;
+  font-size: var(--type-standard);
   line-height: 1.7;
 }
 .status-message {
@@ -616,7 +624,7 @@ h2 em {
   border-left: 2px solid #66836c;
   background: #edf3ea;
   color: #365642;
-  font-size: 11px;
+  font-size: var(--type-standard);
   line-height: 1.6;
 }
 .status-error {
@@ -690,14 +698,14 @@ h2 em {
   max-width: 365px;
   margin-bottom: 26px;
   color: #6f635e;
-  font-size: 12px;
+  font-size: var(--type-reading);
   line-height: 1.8;
 }
 .catering-note {
   display: block;
   margin-top: 32px;
   color: #90796f;
-  font-size: 7px;
+  font-size: var(--type-small);
   letter-spacing: 0.17em;
 }
 .visit-strip {
@@ -723,7 +731,7 @@ h2 em {
   flex-direction: column;
   gap: 8px;
   color: #6e716f;
-  font-size: 12px;
+  font-size: var(--type-reading);
 }
 .visit-details a[href^="tel"] {
   margin: 4px 0 9px;
@@ -744,7 +752,7 @@ h2 em {
 }
 .footer-top {
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr 0.7fr;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.7fr);
   gap: 30px;
   padding-bottom: 38px;
 }
@@ -757,6 +765,7 @@ h2 em {
   width: 47px;
   height: 47px;
   display: grid;
+  flex: none;
   place-items: center;
   border: 1px solid #ce806a;
   border-radius: 50%;
@@ -767,14 +776,14 @@ h2 em {
 }
 .footer-brand strong {
   font-family: "Playfair Display", serif;
-  font-size: 18px;
+  font-size: 1.25rem;
   font-weight: 500;
 }
 .footer-brand p {
   margin: 6px 0 0;
   color: #c1c4c5;
   font-family: "Playfair Display", serif;
-  font-size: 11px;
+  font-size: var(--type-small);
   font-style: italic;
 }
 .footer-top > div:not(.footer-brand) {
@@ -782,18 +791,19 @@ h2 em {
   flex-direction: column;
   align-items: start;
   gap: 7px;
-  font-size: 12px;
+  font-size: var(--type-standard);
   line-height: 1.7;
 }
 .footer-label {
   margin-bottom: 5px;
   color: #da957e;
-  font-size: 8px;
+  font-size: var(--type-small);
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 .footer-top a {
   color: #ece8e1;
+  overflow-wrap: anywhere;
 }
 .footer-top a:hover {
   color: #e2a08a;
@@ -801,12 +811,13 @@ h2 em {
 .footer-bottom {
   min-height: 42px;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: 15px;
   align-items: end;
   border-top: 1px solid rgba(255, 255, 255, 0.14);
   color: #b6bdc3;
-  font-size: 10px;
+  font-size: var(--type-small);
   letter-spacing: 0.035em;
 }
 .page-hero {
@@ -830,7 +841,7 @@ h2 em {
   max-width: 390px;
   margin: 23px 0 0;
   color: #71716e;
-  font-size: 12px;
+  font-size: var(--type-reading);
   line-height: 1.85;
 }
 .menu-hero-image,
@@ -858,7 +869,7 @@ h2 em {
   background: #fffcf7;
   color: #a85e4d;
   font-family: "Playfair Display", serif;
-  font-size: 12px;
+  font-size: var(--type-small);
   font-style: italic;
 }
 .page-hero-ornament {
@@ -879,7 +890,7 @@ h2 em {
   max-width: 300px;
   margin-bottom: 4px;
   color: #85817a;
-  font-size: 9px;
+  font-size: var(--type-small);
   line-height: 1.7;
   text-align: right;
 }
@@ -898,7 +909,7 @@ h2 em {
   border-radius: 30px;
   background: transparent;
   color: #72716e;
-  font-size: 10px;
+  font-size: var(--type-standard);
   cursor: pointer;
   transition: background 0.2s ease;
 }
@@ -958,7 +969,7 @@ h2 em {
   font-size: 28px;
 }
 .menu-placeholder small {
-  font-size: 7px;
+  font-size: 0.75rem;
   letter-spacing: 0.25em;
   line-height: 1.7;
   text-align: center;
@@ -970,7 +981,7 @@ h2 em {
   padding: 6px 9px;
   background: #fffaf5;
   color: #b7624d;
-  font-size: 8px;
+  font-size: var(--type-small);
   letter-spacing: 0.05em;
 }
 .menu-card-body {
@@ -986,47 +997,49 @@ h2 em {
   margin: 0;
   color: #1b2d45;
   font-family: "Playfair Display", serif;
-  font-size: 17px;
+  font-size: var(--type-reading);
   font-weight: 500;
   line-height: 1.25;
 }
 .menu-card-title strong {
   padding-top: 3px;
   color: #c36c57;
-  font-size: 11px;
+  font-size: var(--type-standard);
   white-space: nowrap;
 }
 .menu-card-body > p {
   min-height: 49px;
   margin: 9px 0 12px;
   color: #77736e;
-  font-size: 9px;
+  font-size: var(--type-standard);
   line-height: 1.65;
 }
 .menu-card-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
   padding-top: 11px;
   border-top: 1px solid #eee7df;
 }
 .menu-card-footer > span {
   color: #928a82;
-  font-size: 8px;
+  font-size: var(--type-small);
 }
 .menu-card-footer button {
-  padding: 5px 0 5px 8px;
+  padding: 5px 0;
   border: 0;
   background: none;
   color: #bd6953;
-  font-size: 9px;
+  font-size: var(--type-standard);
   font-weight: 600;
   cursor: pointer;
 }
 .menu-card-footer a {
-  padding: 5px 0 5px 8px;
+  padding: 5px 0;
   color: #bd6953;
-  font-size: 9px;
+  font-size: var(--type-standard);
   font-weight: 600;
 }
 .menu-card-footer button span {
@@ -1046,7 +1059,7 @@ h2 em {
 .menu-bottom-note p {
   margin: 0;
   color: #726e68;
-  font-size: 10px;
+  font-size: var(--type-standard);
 }
 .menu-bottom-note a {
   color: #bc6953;
@@ -1083,7 +1096,6 @@ h2 em {
 }
 .contact-card .eyebrow {
   margin-bottom: 12px;
-  font-size: 8px;
 }
 .contact-card h2 {
   margin-bottom: 12px;
@@ -1095,11 +1107,8 @@ h2 em {
 .contact-card p:not(.eyebrow) {
   margin-bottom: 18px;
   color: #74716d;
-  font-size: 12px;
+  font-size: var(--type-reading);
   line-height: 1.7;
-}
-.contact-card .text-arrow {
-  font-size: 9px;
 }
 .contact-phone {
   color: #bc6953;
@@ -1111,7 +1120,7 @@ h2 em {
 }
 .contact-email-card .contact-phone {
   font-family: "Source Sans Pro", sans-serif;
-  font-size: 17px;
+  font-size: 1.25rem;
   overflow-wrap: anywhere;
 }
 .contact-map {
@@ -1121,7 +1130,7 @@ h2 em {
   align-self: flex-end;
   margin-top: 10px;
   color: #a85645;
-  font-size: 13px;
+  font-size: var(--type-standard);
   text-decoration: underline;
 }
 .recovery-page {
@@ -1136,7 +1145,7 @@ h2 em {
 .recovery-page > p:not(.eyebrow) {
   max-width: 520px;
   color: #686c6d;
-  font-size: 16px;
+  font-size: var(--type-reading);
   line-height: 1.7;
 }
 .recovery-page .account-form {
@@ -1166,7 +1175,7 @@ h2 em {
 .kosher-copy > p:not(.eyebrow) {
   max-width: 530px;
   color: #6f716e;
-  font-size: 16px;
+  font-size: var(--type-reading);
   line-height: 1.7;
 }
 .kosher-copy .kosher-practices {
@@ -1234,7 +1243,7 @@ h2 em {
   max-width: 390px;
   margin: 0 auto 24px;
   color: #77716b;
-  font-size: 11px;
+  font-size: var(--type-reading);
   line-height: 1.8;
 }
 .order-hero {
@@ -1246,13 +1255,14 @@ h2 em {
 }
 .order-layout {
   display: grid;
-  grid-template-columns: 1.5fr 0.8fr;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.8fr);
   align-items: start;
   gap: 7%;
   padding-top: 72px;
 }
 .order-main .section-heading {
   margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 .order-main .section-heading h2 {
   font-size: 37px;
@@ -1263,7 +1273,7 @@ h2 em {
 .cart-row {
   min-height: 119px;
   display: grid;
-  grid-template-columns: 73px 1fr auto auto;
+  grid-template-columns: 73px minmax(0, 1fr) auto auto;
   align-items: center;
   gap: 17px;
   border-bottom: 1px solid #e8e0d7;
@@ -1287,20 +1297,21 @@ h2 em {
   margin: 0 0 4px;
   color: #1b2d45;
   font-family: "Playfair Display", serif;
-  font-size: 15px;
+  font-size: var(--type-reading);
   font-weight: 500;
+  overflow-wrap: anywhere;
 }
 .cart-item-info p {
   margin: 0 0 5px;
   color: #8a837c;
-  font-size: 8px;
+  font-size: var(--type-small);
 }
 .remove-item {
   padding: 0;
   border: 0;
   background: transparent;
   color: #be6b56;
-  font-size: 8px;
+  font-size: var(--type-small);
   text-decoration: underline;
   text-underline-offset: 2px;
   cursor: pointer;
@@ -1321,14 +1332,14 @@ h2 em {
   cursor: pointer;
 }
 .quantity-control span {
-  min-width: 13px;
-  font-size: 9px;
+  min-width: 1ch;
+  font-size: var(--type-standard);
   text-align: center;
 }
 .cart-line-price {
   min-width: 56px;
   color: #1b2d45;
-  font-size: 11px;
+  font-size: var(--type-standard);
   text-align: right;
 }
 .empty-cart {
@@ -1348,7 +1359,7 @@ h2 em {
 }
 .empty-cart p {
   color: #77736e;
-  font-size: 10px;
+  font-size: var(--type-reading);
 }
 .empty-cart .button {
   margin-top: 8px;
@@ -1359,7 +1370,6 @@ h2 em {
 }
 .order-summary .eyebrow {
   margin-bottom: 12px;
-  font-size: 8px;
 }
 .order-summary h3 {
   margin-bottom: 23px;
@@ -1374,11 +1384,14 @@ h2 em {
   gap: 10px;
   margin: 12px 0;
   color: #716c66;
-  font-size: 9px;
+  font-size: var(--type-standard);
+}
+.summary-line > :last-child,
+.summary-total > :last-child {
+  text-align: right;
 }
 .summary-line strong {
   color: #1c2e46;
-  font-size: 10px;
 }
 .summary-divider {
   margin: 19px 0;
@@ -1387,7 +1400,6 @@ h2 em {
 .summary-total {
   align-items: center;
   color: #1b2d45;
-  font-size: 11px;
 }
 .summary-total strong {
   color: #c36c57;
@@ -1398,7 +1410,7 @@ h2 em {
 .summary-note {
   margin: 15px 0 17px;
   color: #817970;
-  font-size: 8px;
+  font-size: var(--type-small);
   line-height: 1.65;
 }
 .sign-in-note,
@@ -1407,7 +1419,7 @@ h2 em {
   padding: 11px;
   background: rgba(255, 255, 255, 0.45);
   color: #736e68;
-  font-size: 9px;
+  font-size: var(--type-standard);
   line-height: 1.5;
 }
 .sign-in-note a {
@@ -1421,13 +1433,14 @@ h2 em {
 .checkout-button {
   width: 100%;
   justify-content: space-between;
-  padding: 0 14px;
-  font-size: 9px;
+  gap: 8px;
+  padding: 8px 14px;
+  overflow-wrap: anywhere;
 }
 .secure-note {
   margin: 12px 0 0;
   color: #858078;
-  font-size: 8px;
+  font-size: var(--type-small);
   text-align: center;
 }
 .secure-note span {
@@ -1440,7 +1453,7 @@ h2 em {
   gap: 10px;
   margin: 13px 0;
   color: #77716b;
-  font-size: 10px;
+  font-size: var(--type-standard);
 }
 .loading-dots {
   display: flex;
@@ -1512,7 +1525,7 @@ h2 em {
 .account-form-intro {
   margin: 0 0 25px;
   color: #75716d;
-  font-size: 11px;
+  font-size: var(--type-reading);
   line-height: 1.8;
 }
 .account-form {
@@ -1522,18 +1535,18 @@ h2 em {
 .account-form label {
   margin: 13px 0 7px;
   color: #3a4551;
-  font-size: 9px;
+  font-size: var(--type-standard);
   font-weight: 600;
 }
 .account-form input {
-  height: 45px;
-  padding: 0 12px;
+  min-height: 45px;
+  padding: 8px 12px;
   border: 1px solid #ddd5cc;
   border-radius: 1px;
   outline: none;
   background: #fffdf9;
   color: #1b2d45;
-  font-size: 11px;
+  font-size: var(--type-standard);
 }
 .account-form input:focus {
   border-color: #bd705c;
@@ -1550,7 +1563,7 @@ h2 em {
 .account-switch {
   margin: 19px 0 0;
   color: #73706b;
-  font-size: 9px;
+  font-size: var(--type-small);
 }
 .account-switch button {
   padding: 0;
@@ -1566,12 +1579,14 @@ h2 em {
 .account-safety {
   margin: 34px 0 0;
   color: #89827a;
-  font-size: 8px;
+  font-size: var(--type-small);
 }
 .account-header {
   display: flex;
   justify-content: space-between;
   align-items: end;
+  flex-wrap: wrap;
+  gap: 12px;
   padding-bottom: 31px;
   border-bottom: 1px solid #e5ddd4;
 }
@@ -1595,7 +1610,6 @@ h2 em {
 }
 .account-panel-heading .eyebrow {
   margin-bottom: 8px;
-  font-size: 8px;
 }
 .account-panel h2 {
   margin: 0;
@@ -1608,16 +1622,19 @@ h2 em {
 .account-panel > p {
   display: flex;
   justify-content: space-between;
+  gap: 12px;
   max-width: 510px;
   margin: 15px 0;
   padding-bottom: 12px;
   border-bottom: 1px solid #eee8e1;
   color: #8a827a;
-  font-size: 10px;
+  font-size: var(--type-standard);
 }
 .account-panel > p strong {
   color: #293c54;
   font-weight: 500;
+  text-align: right;
+  overflow-wrap: anywhere;
 }
 .account-orders .account-panel-heading {
   margin-bottom: 18px;
@@ -1634,16 +1651,16 @@ h2 em {
   justify-content: space-between;
   gap: 20px;
   color: #1c2e46;
-  font-size: 10px;
+  font-size: var(--type-standard);
 }
 .history-row > div span {
   color: #827b74;
-  font-size: 9px;
+  font-size: var(--type-small);
 }
 .history-row p {
   margin: 8px 0;
   color: #77716b;
-  font-size: 9px;
+  font-size: var(--type-small);
   line-height: 1.6;
 }
 .empty-history {
@@ -1652,7 +1669,7 @@ h2 em {
   align-items: center;
   padding: 15px 0;
   color: #77716b;
-  font-size: 10px;
+  font-size: var(--type-standard);
 }
 .empty-history .text-arrow {
   color: #bd6953;
@@ -1661,23 +1678,25 @@ h2 em {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
   margin-top: 35px;
   padding: 20px;
   background: #f4eee8;
 }
 .delete-account-section strong {
   font-family: "Playfair Display", serif;
-  font-size: 14px;
+  font-size: 1.25rem;
   font-weight: 500;
 }
 .delete-account-section p {
   margin: 5px 0 0;
   color: #817b74;
-  font-size: 9px;
+  font-size: var(--type-small);
 }
 .destructive-link {
   color: #a4493d;
-  font-size: 9px;
+  font-size: var(--type-small);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -1695,12 +1714,11 @@ h2 em {
 .not-found > p:not(.eyebrow) {
   margin-bottom: 23px;
   color: #7a756f;
-  font-size: 11px;
+  font-size: var(--type-reading);
 }
 @media (max-width: 900px) {
   .top-note {
     padding: 6px 4%;
-    font-size: 8px;
   }
   .nav-wrap {
     padding: 0 4%;
@@ -1734,7 +1752,7 @@ h2 em {
     gap: 4%;
   }
   .cart-row {
-    grid-template-columns: 60px 1fr auto;
+    grid-template-columns: 60px minmax(0, 1fr) auto;
     gap: 12px;
     padding: 10px 0;
   }
@@ -1754,11 +1772,10 @@ h2 em {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-@media (max-width: 640px) {
+@media (max-width: 720px) {
   .top-note {
     min-height: 29px;
     justify-content: center;
-    font-size: 7px;
     letter-spacing: 0.09em;
   }
   .top-note > span:nth-child(2) {
@@ -1768,17 +1785,12 @@ h2 em {
     display: none;
   }
   .nav-wrap {
-    height: 69px;
+    position: relative;
+    min-height: 69px;
   }
   .brand-lockup img {
     width: 36px;
     height: 43px;
-  }
-  .brand-lockup strong {
-    font-size: 12px;
-  }
-  .brand-lockup small {
-    font-size: 5px;
   }
   .mobile-menu-button {
     width: 42px;
@@ -1798,7 +1810,7 @@ h2 em {
   }
   .main-nav {
     position: absolute;
-    top: 98px;
+    top: 100%;
     right: 0;
     left: 0;
     display: none;
@@ -1821,6 +1833,8 @@ h2 em {
     align-self: start;
     margin-top: 13px;
   }
+}
+@media (max-width: 640px) {
   .hero-section {
     min-height: initial;
     grid-template-columns: 1fr;
@@ -1832,7 +1846,6 @@ h2 em {
   }
   .hero-description {
     margin: 19px 0 21px;
-    font-size: 11px;
   }
   .hero-actions {
     flex-wrap: wrap;
@@ -1840,7 +1853,6 @@ h2 em {
   }
   .hero-footnote {
     margin-top: 32px;
-    font-size: 8px;
   }
   .hero-art {
     width: 88%;
@@ -1857,13 +1869,11 @@ h2 em {
   }
   .hero-side-note {
     right: -3px;
-    font-size: 6px;
   }
   .hero-image-caption {
-    width: 166px;
     min-height: 47px;
     right: 4px;
-    font-size: 10px;
+    max-width: calc(100% - 4px);
   }
   .hero-star-one {
     left: auto;
@@ -1875,14 +1885,11 @@ h2 em {
     bottom: 23px;
   }
   .marquee-strip {
-    height: 39px;
-    justify-content: flex-start;
-    gap: 15px;
-    padding: 0 18px;
-    font-size: 10px;
+    min-height: 39px;
+    justify-content: center;
   }
   .marquee-strip span:nth-of-type(n + 4),
-  .marquee-strip i:nth-of-type(n + 3) {
+  .marquee-strip i {
     display: none;
   }
   .section-pad {
@@ -1922,12 +1929,6 @@ h2 em {
   .favorite-photo {
     height: 280px;
   }
-  .favorite-meta h3 {
-    font-size: 17px;
-  }
-  .favorite-description {
-    font-size: 9px;
-  }
   .catering-banner {
     grid-template-columns: 1fr;
   }
@@ -1957,7 +1958,7 @@ h2 em {
     padding: 37px 7% 14px;
   }
   .footer-top {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 25px 15px;
     padding-bottom: 25px;
   }
@@ -1970,7 +1971,6 @@ h2 em {
     flex-direction: column;
     gap: 6px;
     padding-top: 13px;
-    font-size: 7px;
   }
   .page-hero {
     min-height: initial;
@@ -1983,7 +1983,6 @@ h2 em {
   }
   .page-hero-copy > p:not(.eyebrow) {
     margin-top: 15px;
-    font-size: 10px;
   }
   .menu-hero-image,
   .contact-image,
@@ -2015,7 +2014,6 @@ h2 em {
   }
   .category-tab {
     padding: 9px 12px;
-    font-size: 9px;
   }
   .menu-grid {
     grid-template-columns: 1fr;
@@ -2080,29 +2078,18 @@ h2 em {
     padding-top: 48px;
   }
   .order-main .section-heading {
-    align-items: end;
-    flex-direction: row;
+    align-items: start;
   }
   .order-main .section-heading h2 {
     font-size: 31px;
   }
-  .order-main .section-heading > .text-arrow {
-    font-size: 8px;
-    white-space: nowrap;
-  }
   .cart-row {
-    grid-template-columns: 54px 1fr auto;
+    grid-template-columns: 54px minmax(0, 1fr) auto;
     gap: 10px;
   }
   .cart-thumb {
     width: 54px;
     height: 54px;
-  }
-  .cart-item-info h3 {
-    font-size: 13px;
-  }
-  .cart-line-price {
-    font-size: 10px;
   }
   .order-summary {
     padding: 21px;
@@ -2138,16 +2125,7 @@ h2 em {
   }
   .account-header > button {
     margin-top: 9px;
-    font-size: 9px;
     white-space: nowrap;
-  }
-  .account-panel > p {
-    gap: 15px;
-    font-size: 9px;
-  }
-  .account-panel > p strong {
-    text-align: right;
-    overflow-wrap: anywhere;
   }
   .account-panel h2 {
     font-size: 27px;
@@ -2174,9 +2152,6 @@ h2 em {
   .delete-account-section p {
     max-width: 200px;
     line-height: 1.6;
-  }
-  .destructive-link {
-    white-space: nowrap;
   }
   .not-found {
     min-height: 420px;
