@@ -24,7 +24,12 @@ export function SiteFooter() {
             <br />
             New York, NY 10025
           </a>
+          <div>
+                    <span className="footer-label">Follow us</span> <br/>
+          <Link to="https://www.instagram.com/pattiserie_nyc?exln=bGh3eXZ6ZDloMGNt&utm_source=qr">Instagram</Link>
+          </div>
         </div>
+          
         <div>
           <span className="footer-label">Say bonjour</span>
           <a href={STORE_PHONE.href}>Store {STORE_PHONE.label}</a>
@@ -38,6 +43,8 @@ export function SiteFooter() {
           <Link to="/catering">Catering</Link>
           <Link to="/about">About us</Link>
           <Link to="/order">Order online</Link>
+        </div>
+        <div>
         </div>
       </div>
       <div className="footer-bottom">
