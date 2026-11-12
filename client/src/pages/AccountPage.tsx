@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { LoadingState, StatusMessage } from "../components/StatusMessage";
 import { useCurrentUser } from "../context/CurrentUserContext";
 import { api } from "../lib/api";
-import { MENU_ITEMS } from "../lib/menu";
+import { findMenuItem } from "../lib/menu";
 import type { ApiOrder } from "../types";
 
 export function AccountPage() {
@@ -195,8 +195,7 @@ export function AccountPage() {
                   <p>
                     {order.items
                       .map(
-                        (item) =>
-                          `${item.quantity} × ${MENU_ITEMS.find((menuItem) => menuItem.id === item.itemId)?.name ?? "Café favorite"}`,
+                        (item) => `${item.quantity} × ${findMenuItem(item.itemId)?.name ?? "Café favorite"}`,
                       )
                       .join(", ")}
                   </p>

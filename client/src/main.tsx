@@ -1,19 +1,19 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
-import { App } from "./App";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { appRoutes } from "./App";
 import { CartProvider } from "./context/CartContext";
 import { CurrentUserProvider } from "./context/CurrentUserContext";
 import "./styles.css";
 
+const router = createBrowserRouter(appRoutes);
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <CurrentUserProvider>
-        <CartProvider>
-          <App />
-        </CartProvider>
-      </CurrentUserProvider>
-    </BrowserRouter>
+    <CurrentUserProvider>
+      <CartProvider>
+        <RouterProvider router={router} />
+      </CartProvider>
+    </CurrentUserProvider>
   </React.StrictMode>,
 );

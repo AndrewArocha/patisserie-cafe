@@ -3,7 +3,62 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { StatusMessage } from "../components/StatusMessage";
 import { useCart } from "../context/CartContext";
-import { categories, MENU_ITEMS, MENU_ITEM_IMAGES, money } from "../lib/menu";
+import { categories, MENU_ITEMS, money, ROOM_RENTAL_RATE, type MenuSizeOption } from "../lib/menu";
+import type { MenuItem } from "../types";
+
+function MenuSizePicker({
+  groupId,
+  groupName,
+  sizes,
+  onAdd,
+}: {
+  groupId: string;
+  groupName: string;
+  sizes: MenuSizeOption[];
+  onAdd: (item: MenuItem) => void;
+}) {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const selected = sizes[selectedIndex].item;
+
+  return (
+    <>
+      <p>{selected.description}</p>
+      <fieldset className="mb-3 min-w-0">
+        <legend className="mb-2 text-sm font-semibold text-ink">
+          <span className="sr-only">{groupName} </span>Size
+        </legend>
+        <div className={`grid gap-1.5 ${sizes.length === 2 ? "grid-cols-2" : "grid-cols-3"}`}>
+          {sizes.map(({ item, label, detail }, index) => (
+            <label key={item.id} className="cursor-pointer">
+              <input
+                className="peer sr-only"
+                type="radio"
+                name={`${groupId}-size`}
+                value={item.id}
+                checked={index === selectedIndex}
+                onChange={() => setSelectedIndex(index)}
+              />
+              <span className="grid justify-items-center border border-ink/15 px-1 py-2 text-center text-sm leading-tight peer-checked:border-ink peer-checked:bg-ink/5 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ink">
+                <span className="font-semibold">{label}</span>
+                <span>{detail}</span>
+                <span className="mt-1 font-semibold tabular-nums">{money(item.price)}</span>
+              </span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+      <div className="menu-card-footer">
+        <button
+          className="ml-auto"
+          onClick={() => onAdd(selected)}
+          aria-label={`Add ${selected.name} to order`}
+        >
+          Add to order <span aria-hidden="true">＋</span>
+        </button>
+      </div>
+    </>
+  );
+}
 
 export function MenuPage() {
   const [category, setCategory] = useState<string>("All");
@@ -13,6 +68,10 @@ export function MenuPage() {
     [category],
   );
   const { addItem } = useCart();
+  const addToOrder = (item: MenuItem) => {
+    addItem(item);
+    setMessage(`${item.name} added to your bag.`);
+  };
 
   return (
     <main>
@@ -29,7 +88,13 @@ export function MenuPage() {
           <p>Handcrafted with a little French flair and a lot of neighborhood love.</p>
         </div>
         <div className="menu-hero-image">
-          <img src="/images/caprese-sandwich.png" alt="Fresh mozzarella and pesto on toasted country bread" />
+          <img
+            src="/images/menu-hero-pastries.webp"
+            alt="A baker arranging almond croissants and fruit pastries on a tray"
+            width={1536}
+            height={1024}
+            fetchPriority="high"
+          />
           <span className="hero-photo-note">fresh, never fussy</span>
         </div>
         <span className="page-hero-ornament">✳</span>
@@ -64,55 +129,68 @@ export function MenuPage() {
         </div>
         {message && <StatusMessage kind="success">{message}</StatusMessage>}
         <div className="menu-grid">
-          {items.map((item, index) => (
-            <motion.article
-              key={item.id}
-              className="menu-card"
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: Math.min(index * 0.035, 0.22) }}
-            >
-              <div className="menu-card-image">
-                <img
-                  src={MENU_ITEM_IMAGES[item.id] ?? item.image}
-                  alt={`${item.name}: ${item.description}`}
-                  loading="lazy"
-                />
-                {item.tag && <span className="menu-tag">{item.tag}</span>}
-              </div>
-              <div className="menu-card-body">
-                <div className="menu-card-title">
-                  <h3>{item.name}</h3>
-                  <strong>{item.price === null ? "Call for pricing" : money(item.price)}</strong>
+          {items.map((item, index) => {
+            const hasSizes = "sizes" in item;
+            return (
+              <motion.article
+                key={item.id}
+                className="menu-card"
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: Math.min(index * 0.035, 0.22) }}
+              >
+                <div className="menu-card-image">
+                  <img src={item.image} alt={item.name} loading="lazy" />
+                  {item.tag && <span className="menu-tag">{item.tag}</span>}
                 </div>
-                <p>{item.description}</p>
-                <div className="menu-card-footer">
-                  <span>{item.unit}</span>
-                  {item.price === null ? (
-                    <a href="tel:+16464498730">
-                      Call to order <span>↗</span>
-                    </a>
+                <div className="menu-card-body">
+                  <div className="menu-card-title">
+                    <h3>{item.name}</h3>
+                    {!hasSizes && (
+                      <strong>{item.price === null ? "Call for pricing" : money(item.price)}</strong>
+                    )}
+                  </div>
+                  {hasSizes ? (
+                    <MenuSizePicker
+                      groupId={item.id}
+                      groupName={item.name}
+                      sizes={item.sizes}
+                      onAdd={addToOrder}
+                    />
                   ) : (
-                    <button
-                      onClick={() => {
-                        addItem(item);
-                        setMessage(`${item.name} added to your bag.`);
-                      }}
-                    >
-                      Add to order <span>＋</span>
-                    </button>
+                    <>
+                      <p>{item.description}</p>
+                      <div className="menu-card-footer">
+                        <span>{item.unit}</span>
+                        {item.price === null ? (
+                          <a href="tel:+16464498730">
+                            Call to order <span>↗</span>
+                          </a>
+                        ) : (
+                          <button onClick={() => addToOrder(item)}>
+                            Add to order <span>＋</span>
+                          </button>
+                        )}
+                      </div>
+                    </>
                   )}
                 </div>
-              </div>
-            </motion.article>
-          ))}
+              </motion.article>
+            );
+          })}
         </div>
         <div className="menu-bottom-note">
-          <span className="tiny-spark">✳</span>
-          <p>
-            Planning something bigger? <Link to="/contact">Ask us about full-service catering</Link> with
-            staffing, rentals and all the thoughtful details.
-          </p>
+          <span className="tiny-spark" aria-hidden="true">
+            ✳
+          </span>
+          <div>
+            <p>
+              Planning something bigger? <Link to="/contact">Ask us about full-service catering.</Link>
+            </p>
+            <p>
+              <Link to="/contact#room-rental">Room rental</Link> is {ROOM_RENTAL_RATE}.
+            </p>
+          </div>
         </div>
       </section>
     </main>

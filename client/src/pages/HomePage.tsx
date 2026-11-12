@@ -1,18 +1,21 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { MENU_ITEMS, money } from "../lib/menu";
+import { findMenuItem, money } from "../lib/menu";
 import { useCart } from "../context/CartContext";
 import { StatusMessage } from "../components/StatusMessage";
 import { useState } from "react";
+import type { MenuItem } from "../types";
 
 const fadeUp = { hidden: { opacity: 0, y: 22 }, visible: { opacity: 1, y: 0 } };
+const highlights = ["lunch_small", "seasonal_fruit", "bagels_large"]
+  .map(findMenuItem)
+  .filter((item) => item !== undefined);
 
 export function HomePage() {
   const { addItem } = useCart();
   const [message, setMessage] = useState("");
-  const highlights = [MENU_ITEMS[6], MENU_ITEMS[15], MENU_ITEMS[11]];
 
-  const addFavorite = (item: (typeof MENU_ITEMS)[number]) => {
+  const addFavorite = (item: MenuItem) => {
     addItem(item);
     setMessage(`${item.name} added to your bag.`);
   };
@@ -110,7 +113,7 @@ export function HomePage() {
             still warm, and there’s always room for one more at the table.
           </p>
           <p>That’s what we’re making here, every single day.</p>
-          <Link to="/contact" className="text-arrow text-arrow-coral">
+          <Link to="/about" className="text-arrow text-arrow-coral">
             A little more about us <span>→</span>
           </Link>
         </div>
@@ -146,6 +149,8 @@ export function HomePage() {
           <img
             src="/images/patis-bakery/tartikov-kosher-certificate.jpg"
             alt="Tartikov kosher certificate"
+            width={1700}
+            height={2200}
             loading="lazy"
           />
         </a>

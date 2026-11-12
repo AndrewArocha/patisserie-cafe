@@ -35,6 +35,17 @@ export const HTTP_MESSAGES = {
   passwordResetComplete: "Your password has been changed. Please sign in with your new password.",
 } as const;
 
+const saladPlatterSizes = {
+  small: { serves: 10, priceCents: 9950 },
+  medium: { serves: 20, priceCents: 19550 },
+  large: { serves: 25, priceCents: 25050 },
+} as const;
+
+function saladPlatter(name: string, size: keyof typeof saladPlatterSizes) {
+  const { serves, priceCents } = saladPlatterSizes[size];
+  return { name: `${name} · ${size} (serves ${serves})`, priceCents, minimum: 1 };
+}
+
 export const MENU_CATALOG = {
   breakfast_small: { name: "Breakfast basket · small (serves 10)", priceCents: 11950, minimum: 1 },
   breakfast_medium: { name: "Breakfast basket · medium (serves 20)", priceCents: 23950, minimum: 1 },
@@ -71,6 +82,27 @@ export const MENU_CATALOG = {
   sandwich_caprese: { name: "Caprese sandwich (per person)", priceCents: 1695, minimum: 10 },
   sandwich_tunisian_tuna: { name: "Tunisian tuna sandwich (per person)", priceCents: 1695, minimum: 10 },
   sandwich_athens: { name: "Athens sandwich (per person)", priceCents: 1695, minimum: 10 },
+  caprese_salad_small: saladPlatter("Tomato mozzarella", "small"),
+  caprese_salad_medium: saladPlatter("Tomato mozzarella", "medium"),
+  caprese_salad_large: saladPlatter("Tomato mozzarella", "large"),
+  caesar_salad_small: saladPlatter("Caesar", "small"),
+  caesar_salad_medium: saladPlatter("Caesar", "medium"),
+  caesar_salad_large: saladPlatter("Caesar", "large"),
+  greek_salad_small: saladPlatter("It’s all Greek", "small"),
+  greek_salad_medium: saladPlatter("It’s all Greek", "medium"),
+  greek_salad_large: saladPlatter("It’s all Greek", "large"),
+  tuna_nicoise_small: saladPlatter("Tuna Niçoise", "small"),
+  tuna_nicoise_medium: saladPlatter("Tuna Niçoise", "medium"),
+  tuna_nicoise_large: saladPlatter("Tuna Niçoise", "large"),
+  greek_quinoa_small: saladPlatter("Greek quinoa", "small"),
+  greek_quinoa_medium: saladPlatter("Greek quinoa", "medium"),
+  greek_quinoa_large: saladPlatter("Greek quinoa", "large"),
+  beet_salad_small: saladPlatter("Beet salad", "small"),
+  beet_salad_medium: saladPlatter("Beet salad", "medium"),
+  beet_salad_large: saladPlatter("Beet salad", "large"),
+  egg_salad_small: saladPlatter("Egg salad", "small"),
+  egg_salad_medium: saladPlatter("Egg salad", "medium"),
+  egg_salad_large: saladPlatter("Egg salad", "large"),
   frittata: { name: "Garden frittata (per person)", priceCents: 595, minimum: 12 },
   quiche: { name: "Quiche (mini)", priceCents: 795, minimum: 12 },
   quiche_large: { name: "Quiche (large)", priceCents: 3695, minimum: 4 },

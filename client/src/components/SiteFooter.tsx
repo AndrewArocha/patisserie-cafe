@@ -15,6 +15,7 @@ export function SiteFooter() {
           <span className="footer-label">Come by</span>
           <a
             href="https://maps.google.com/?q=676+Amsterdam+Ave,+New+York,+NY+10025"
+            data-destination="Google Maps"
             target="_blank"
             rel="noreferrer"
           >
@@ -32,6 +33,7 @@ export function SiteFooter() {
         <div>
           <span className="footer-label">Explore</span>
           <Link to="/menu">Our menu</Link>
+          <Link to="/about">About us</Link>
           <Link to="/order">Order online</Link>
         </div>
       </div>

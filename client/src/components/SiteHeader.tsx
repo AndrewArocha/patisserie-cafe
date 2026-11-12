@@ -7,6 +7,7 @@ import { StatusMessage } from "./StatusMessage";
 const navItems = [
   { label: "Our menu", to: "/menu" },
   { label: "Catering", to: "/menu#catering" },
+  { label: "About us", to: "/about" },
   { label: "Contact us", to: "/contact" },
 ];
 

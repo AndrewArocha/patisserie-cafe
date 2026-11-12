@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { ROOM_RENTAL_RATE } from "../lib/menu";
 
 export function ContactPage() {
   return (
@@ -36,6 +37,7 @@ export function ContactPage() {
           <a
             className="text-arrow text-arrow-coral"
             href="https://maps.google.com/?q=676+Amsterdam+Ave,+New+York,+NY+10025"
+            data-destination="Google Maps"
             target="_blank"
             rel="noreferrer"
           >
@@ -69,7 +71,7 @@ export function ContactPage() {
           />
         </div>
       </section>
-      <section className="contact-cta">
+      <section className="contact-cta scroll-mt-8" id="room-rental">
         <p className="eyebrow">
           <span className="eyebrow-rule" /> For your next get-together
         </p>
@@ -79,9 +81,20 @@ export function ContactPage() {
           <em>a lovely occasion.</em>
         </h2>
         <p>Morning meeting or long lunch, there’s something wonderful about sharing good food.</p>
-        <Link className="button button-navy" to="/menu#catering">
-          Explore catering <span>↗</span>
-        </Link>
+        <p>
+          Room rental is <strong>{ROOM_RENTAL_RATE}</strong>.
+        </p>
+        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
+          <Link className="button button-navy" to="/menu#catering">
+            Explore catering <span aria-hidden="true">↗</span>
+          </Link>
+          <a
+            className="text-arrow text-terracotta!"
+            href="mailto:contact@patisseriecafe.co?subject=Room%20rental%20inquiry"
+          >
+            Ask about room rental <span aria-hidden="true">↗</span>
+          </a>
+        </div>
       </section>
     </main>
   );

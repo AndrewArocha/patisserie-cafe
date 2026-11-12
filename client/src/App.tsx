@@ -1,6 +1,9 @@
-import { Link, Route, Routes } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, Outlet, useLocation, type RouteObject } from "react-router-dom";
+import { NavigationPrompts } from "./components/NavigationPrompts";
 import { SiteFooter } from "./components/SiteFooter";
 import { SiteHeader } from "./components/SiteHeader";
+import { AboutPage } from "./pages/AboutPage";
 import { AccountPage } from "./pages/AccountPage";
 import { ContactPage } from "./pages/ContactPage";
 import { ForgotPasswordPage } from "./pages/ForgotPasswordPage";
@@ -27,20 +30,39 @@ function NotFoundPage() {
 }
 
 export function App() {
+  const { pathname, hash } = useLocation();
+
+  useEffect(() => {
+    const target = hash ? document.getElementById(hash.slice(1)) : null;
+    if (target) {
+      target.scrollIntoView();
+    } else {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+  }, [pathname, hash]);
+
   return (
-    <>
+    <NavigationPrompts>
       <SiteHeader />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/menu" element={<MenuPage />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="/order" element={<OrderPage />} />
-        <Route path="/account" element={<AccountPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        <Route path="/reset-password" element={<ResetPasswordPage />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+      <Outlet />
       <SiteFooter />
-    </>
+    </NavigationPrompts>
   );
 }
+
+export const appRoutes: RouteObject[] = [
+  {
+    element: <App />,
+    children: [
+      { index: true, element: <HomePage /> },
+      { path: "menu", element: <MenuPage /> },
+      { path: "about", element: <AboutPage /> },
+      { path: "contact", element: <ContactPage /> },
+      { path: "order", element: <OrderPage /> },
+      { path: "account", element: <AccountPage /> },
+      { path: "forgot-password", element: <ForgotPasswordPage /> },
+      { path: "reset-password", element: <ResetPasswordPage /> },
+      { path: "*", element: <NotFoundPage /> },
+    ],
+  },
+];

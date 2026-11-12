@@ -40,8 +40,19 @@
   --color-cream: #fbf8f3;
   --color-ink: #192b43;
   --color-coral: #ce705a;
+  --color-terracotta: #a34f3d;
+  --color-blush: #f5e3d8;
   --font-display: "Playfair Display", Georgia, serif;
   --font-sans: "Source Sans Pro", sans-serif;
+}
+
+@utility about-shell {
+  width: min(calc(100% - 3rem), 78rem);
+  margin-inline: auto;
+
+  @variant sm {
+    width: min(calc(100% - 6rem), 78rem);
+  }
 }
 
 :root {
@@ -67,6 +78,9 @@ html {
 body {
   margin: 0;
   min-width: 320px;
+}
+body:has(.about-photo-dialog[open], .navigation-dialog[open]) {
+  overflow: hidden;
 }
 button,
 input {
@@ -844,7 +858,16 @@ h2 em {
   font-size: var(--type-reading);
   line-height: 1.85;
 }
-.menu-hero-image,
+.menu-hero-image {
+  position: relative;
+  justify-self: center;
+  width: min(100%, 580px);
+}
+.menu-hero-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
 .contact-image,
 .order-hero-image {
   position: relative;
@@ -852,7 +875,6 @@ h2 em {
   overflow: hidden;
   border-radius: 170px 170px 4px 4px;
 }
-.menu-hero-image img,
 .contact-image img,
 .order-hero-image img {
   width: 100%;
@@ -871,6 +893,10 @@ h2 em {
   font-family: "Playfair Display", serif;
   font-size: var(--type-small);
   font-style: italic;
+}
+.hero-photo-note {
+  right: 5%;
+  bottom: 5%;
 }
 .page-hero-ornament {
   position: absolute;
@@ -1184,16 +1210,16 @@ h2 em {
 }
 .kosher-certificate {
   display: block;
-  max-height: 300px;
-  padding: 12px;
-  background: #fff;
-  box-shadow: 0 10px 35px #192b4318;
+  justify-self: center;
+  width: min(100%, 286px);
+  box-shadow:
+    0 14px 32px #192b432e,
+    0 3px 8px #192b431a;
 }
 .kosher-certificate img {
   display: block;
   width: 100%;
-  max-height: 276px;
-  object-fit: contain;
+  height: auto;
 }
 .photo-story-grid {
   display: grid;
@@ -1772,7 +1798,7 @@ h2 em {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-@media (max-width: 720px) {
+@media (max-width: 800px) {
   .top-note {
     min-height: 29px;
     justify-content: center;
@@ -1984,7 +2010,6 @@ h2 em {
   .page-hero-copy > p:not(.eyebrow) {
     margin-top: 15px;
   }
-  .menu-hero-image,
   .contact-image,
   .order-hero-image {
     height: 245px;
@@ -2049,9 +2074,6 @@ h2 em {
   .kosher-section {
     grid-template-columns: 1fr;
     gap: 28px;
-  }
-  .kosher-certificate {
-    max-width: 360px;
   }
   .photo-story-grid {
     grid-template-columns: 1fr;

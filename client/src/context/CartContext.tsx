@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
+import { findMenuItem } from "../lib/menu";
 import type { CartEntry, MenuItem } from "../types";
 
 interface CartContextValue {
@@ -17,7 +18,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [entries, setEntries] = useState<CartEntry[]>(() => {
     try {
       const stored = window.localStorage.getItem("patisserie.cart");
-      return stored ? (JSON.parse(stored) as CartEntry[]) : [];
+      if (!stored) return [];
+      return (JSON.parse(stored) as CartEntry[]).map((entry) => ({
+        ...entry,
+        item: findMenuItem(entry.item.id) ?? entry.item,
+      }));
     } catch {
       return [];
     }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { useCheckoutRedirect } from "../components/NavigationPrompts";
 import { LoadingState, StatusMessage } from "../components/StatusMessage";
 import { useCart } from "../context/CartContext";
 import { useCurrentUser } from "../context/CurrentUserContext";
@@ -9,6 +10,7 @@ import { MINIMUM_QUANTITIES, money } from "../lib/menu";
 export function OrderPage() {
   const { currentUser } = useCurrentUser();
   const { entries, setQuantity, removeItem, cartTotal, clearCart } = useCart();
+  const redirectToCheckout = useCheckoutRedirect();
   const [searchParams] = useSearchParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState("");
@@ -72,7 +74,7 @@ export function OrderPage() {
       const checkout = await api.checkout(created.order._id);
       if (!checkout.checkoutUrl)
         throw new ApiError("We couldn’t open secure checkout. Please call the café so we can help.", 503);
-      window.location.assign(checkout.checkoutUrl);
+      redirectToCheckout(checkout.checkoutUrl);
     } catch (error) {
       setMessageKind("error");
       const detail = error instanceof Error ? error.message : "Please try again or call the café for help.";
