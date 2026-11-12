@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { CATERING_PHONE, STORE_PHONE } from "../lib/contact";
 import { ROOM_RENTAL_RATE } from "../lib/menu";
 
 export function ContactPage() {
@@ -48,16 +49,30 @@ export function ContactPage() {
           <span className="contact-icon">☎</span>
           <p className="eyebrow">We’d love to hear from you</p>
           <h2>Give us a ring.</h2>
-          <p>For catering questions, larger gatherings, or just to say hello.</p>
-          <a className="contact-phone" href="tel:+16464498730">
-            (646) 449-8730
-          </a>
+          <dl className="grid gap-4 xl:grid-cols-2">
+            <div>
+              <dt>Store &amp; general questions</dt>
+              <dd>
+                <a className="contact-phone" href={STORE_PHONE.href}>
+                  {STORE_PHONE.label}
+                </a>
+              </dd>
+            </div>
+            <div>
+              <dt>Catering &amp; orders</dt>
+              <dd>
+                <a className="contact-phone" href={CATERING_PHONE.href}>
+                  {CATERING_PHONE.label}
+                </a>
+              </dd>
+            </div>
+          </dl>
         </div>
         <div className="contact-card contact-email-card">
           <span className="contact-icon">✉</span>
           <p className="eyebrow">Send us a note</p>
           <h2>We’re listening.</h2>
-          <p>Questions about the menu, an order, or an upcoming gathering?</p>
+          <p>For general questions about the café.</p>
           <a className="contact-phone" href="mailto:contact@patisseriecafe.co">
             contact@patisseriecafe.co
           </a>
@@ -85,15 +100,12 @@ export function ContactPage() {
           Room rental is <strong>{ROOM_RENTAL_RATE}</strong>.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
-          <Link className="button button-navy" to="/menu#catering">
+          <Link className="button button-navy" to="/catering">
             Explore catering <span aria-hidden="true">↗</span>
           </Link>
-          <a
-            className="text-arrow text-terracotta!"
-            href="mailto:contact@patisseriecafe.co?subject=Room%20rental%20inquiry"
-          >
-            Ask about room rental <span aria-hidden="true">↗</span>
-          </a>
+          <Link className="text-arrow text-terracotta!" to="/catering/events">
+            Explore Rentals &amp; Full-service <span aria-hidden="true">↗</span>
+          </Link>
         </div>
       </section>
     </main>

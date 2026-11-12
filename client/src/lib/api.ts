@@ -1,4 +1,5 @@
 import type { ApiErrorResponse, ApiOrder, AuthResponse, PublicUser, UserResponse } from "../types";
+import type { CateringRequest } from "./catering";
 
 const API_BASE_URL = (import.meta.env.VITE_API_URL ?? "http://localhost:4000/api").replace(/\/$/, "");
 const TOKEN_KEY = "patisserie.accessToken";
@@ -49,6 +50,12 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 }
 
 export const api = {
+  requestCatering: (details: CateringRequest) =>
+    request<{ message: string }>("/catering/requests", {
+      method: "POST",
+      body: JSON.stringify(details),
+      signal: AbortSignal.timeout(45_000),
+    }),
   signUp: (email: string, password: string) =>
     request<{ user: PublicUser }>("/auth/signup", {
       method: "POST",

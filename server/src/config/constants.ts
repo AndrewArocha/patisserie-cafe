@@ -6,6 +6,8 @@ export const PASSWORD_RESET_TTL_MS = 30 * 60 * 1000;
 export const MAX_DATABASE_POOL_SIZE = 10;
 export const API_PREFIX = "/api";
 
+const ORDERS_PHONE = "(551) 241-8349";
+
 export const HTTP_MESSAGES = {
   badRequest: "Please check the submitted information and try again.",
   unauthorized: "Your session is not valid. Please sign in again.",
@@ -23,7 +25,7 @@ export const HTTP_MESSAGES = {
   orderItemsUnavailable: "One or more selected menu items are unavailable.",
   checkoutItemUnavailable: "This order contains an unavailable menu item.",
   orderAccessForbidden: "You do not have access to this order.",
-  paidOrderDelete: "A paid order cannot be deleted online. Please call the café for help.",
+  paidOrderDelete: `A paid order cannot be deleted online. Call our orders line at ${ORDERS_PHONE} for help.`,
   orderAlreadyPaid: "This order has already been paid.",
   checkoutSessionNotFound: "This checkout session could not be found.",
   checkoutSessionInvalid: "Please check the checkout session and try again.",
@@ -103,6 +105,13 @@ export const MENU_CATALOG = {
   egg_salad_small: saladPlatter("Egg salad", "small"),
   egg_salad_medium: saladPlatter("Egg salad", "medium"),
   egg_salad_large: saladPlatter("Egg salad", "large"),
+  salad_of_the_day_small: saladPlatter("Salad of the day", "small"),
+  salad_of_the_day_medium: saladPlatter("Salad of the day", "medium"),
+  salad_of_the_day_large: saladPlatter("Salad of the day", "large"),
+  soup_of_the_day: { name: "Vegetarian soup of the day (8 oz)", priceCents: 695, minimum: 1 },
+  parve_cake_raspberry: { name: "Parve cake · raspberry (9 inch)", priceCents: 4000, minimum: 1 },
+  parve_cake_lemon: { name: "Parve cake · lemon (9 inch)", priceCents: 4000, minimum: 1 },
+  parve_cake_chocolate: { name: "Parve cake · chocolate (9 inch)", priceCents: 4000, minimum: 1 },
   frittata: { name: "Garden frittata (per person)", priceCents: 595, minimum: 12 },
   quiche: { name: "Quiche (mini)", priceCents: 795, minimum: 12 },
   quiche_large: { name: "Quiche (large)", priceCents: 3695, minimum: 4 },
@@ -119,7 +128,7 @@ export const ERROR_MESSAGES = {
   invalidCredentials: "Email or password is incorrect.",
   passwordTooShort: (minimum: number) => `Password must be at least ${minimum} characters long.`,
   orderMinimum: (name: string, minimum: number) => `${name} requires a minimum quantity of ${minimum}.`,
-  stripeMissing: "Online payment is being set up. Please call the café to place your order.",
+  stripeMissing: `Online payment is being set up. Call our orders line at ${ORDERS_PHONE} to place your order.`,
   invalidEnvironment: "Server environment configuration is invalid.",
   passwordResetEmailSubject: "Reset your Patisserie Café password",
 } as const;

@@ -5,6 +5,7 @@ import { SiteFooter } from "./components/SiteFooter";
 import { SiteHeader } from "./components/SiteHeader";
 import { AboutPage } from "./pages/AboutPage";
 import { AccountPage } from "./pages/AccountPage";
+import { CateringEventsPage, CateringPage } from "./pages/CateringPage";
 import { ContactPage } from "./pages/ContactPage";
 import { ForgotPasswordPage } from "./pages/ForgotPasswordPage";
 import { HomePage } from "./pages/HomePage";
@@ -56,6 +57,8 @@ export const appRoutes: RouteObject[] = [
     children: [
       { index: true, element: <HomePage /> },
       { path: "menu", element: <MenuPage /> },
+      { path: "catering", element: <CateringPage /> },
+      { path: "catering/events", element: <CateringEventsPage /> },
       { path: "about", element: <AboutPage /> },
       { path: "contact", element: <ContactPage /> },
       { path: "order", element: <OrderPage /> },

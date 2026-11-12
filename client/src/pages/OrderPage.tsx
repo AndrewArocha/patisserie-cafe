@@ -5,6 +5,7 @@ import { LoadingState, StatusMessage } from "../components/StatusMessage";
 import { useCart } from "../context/CartContext";
 import { useCurrentUser } from "../context/CurrentUserContext";
 import { ApiError, api } from "../lib/api";
+import { CATERING_PHONE } from "../lib/contact";
 import { MINIMUM_QUANTITIES, money } from "../lib/menu";
 
 export function OrderPage() {
@@ -73,11 +74,17 @@ export function OrderPage() {
       setMessage("Your order is saved. Opening secure checkout…");
       const checkout = await api.checkout(created.order._id);
       if (!checkout.checkoutUrl)
-        throw new ApiError("We couldn’t open secure checkout. Please call the café so we can help.", 503);
+        throw new ApiError(
+          `We couldn’t open secure checkout. Call our orders line at ${CATERING_PHONE.label} for help.`,
+          503,
+        );
       redirectToCheckout(checkout.checkoutUrl);
     } catch (error) {
       setMessageKind("error");
-      const detail = error instanceof Error ? error.message : "Please try again or call the café for help.";
+      const detail =
+        error instanceof Error
+          ? error.message
+          : `Please try again or call our orders line at ${CATERING_PHONE.label}.`;
       setMessage(
         orderWasSaved
           ? `Your order is saved, but secure checkout could not start. ${detail}`
@@ -207,7 +214,11 @@ export function OrderPage() {
             <strong>{money(cartTotal)}</strong>
           </div>
           <p className="summary-note">
-            Tax and delivery fees may apply. Catering orders can be arranged by phone.
+            Tax and delivery fees may apply. For catering and orders, call{" "}
+            <a className="font-semibold underline underline-offset-2" href={CATERING_PHONE.href}>
+              {CATERING_PHONE.label}
+            </a>
+            .
           </p>
           {currentUser ? (
             <div className="signed-in-note">

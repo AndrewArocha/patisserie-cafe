@@ -1,19 +1,74 @@
-import { useMemo, useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { StatusMessage } from "../components/StatusMessage";
 import { useCart } from "../context/CartContext";
-import { categories, MENU_ITEMS, money, ROOM_RENTAL_RATE, type MenuSizeOption } from "../lib/menu";
+import { CATERING_PHONE } from "../lib/contact";
+import {
+  categories,
+  MENU_ITEMS,
+  MENU_PHOTO_ROTATIONS,
+  money,
+  ROOM_RENTAL_RATE,
+  type MenuSizeOption,
+} from "../lib/menu";
 import type { MenuItem } from "../types";
 
-function MenuSizePicker({
+function RotatingMenuPhoto({ photos, name }: { photos: string[]; name: string }) {
+  const frame = useRef<HTMLDivElement>(null);
+  const visible = useInView(frame);
+  const reducedMotion = useReducedMotion();
+  const [paused, setPaused] = useState(false);
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (!visible || reducedMotion || paused) return;
+    const next = (index + 1) % photos.length;
+    const photo = new Image();
+    photo.src = photos[next];
+    const timer = window.setTimeout(() => setIndex(next), 4200);
+    return () => window.clearTimeout(timer);
+  }, [index, paused, photos, reducedMotion, visible]);
+
+  return (
+    <div ref={frame} className="absolute inset-0 bg-[#f4eee7]">
+      <AnimatePresence initial={false}>
+        <motion.img
+          key={photos[index]}
+          src={photos[index]}
+          alt={name}
+          loading="lazy"
+          className="absolute inset-0 size-full object-contain p-1.5"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.65 }}
+        />
+      </AnimatePresence>
+      {!reducedMotion && (
+        <button
+          type="button"
+          aria-label={paused ? `Resume ${name} photo rotation` : `Pause ${name} photo rotation`}
+          className="absolute right-2 bottom-2 grid size-9 cursor-pointer place-items-center rounded-full bg-cream/95 shadow-sm"
+          onClick={() => setPaused(!paused)}
+        >
+          <span aria-hidden="true">{paused ? "▶" : "Ⅱ"}</span>
+        </button>
+      )}
+    </div>
+  );
+}
+
+function MenuOptionPicker({
   groupId,
   groupName,
+  optionLabel = "Size",
   sizes,
   onAdd,
 }: {
   groupId: string;
   groupName: string;
+  optionLabel?: string;
   sizes: MenuSizeOption[];
   onAdd: (item: MenuItem) => void;
 }) {
@@ -25,7 +80,8 @@ function MenuSizePicker({
       <p>{selected.description}</p>
       <fieldset className="mb-3 min-w-0">
         <legend className="mb-2 text-sm font-semibold text-ink">
-          <span className="sr-only">{groupName} </span>Size
+          <span className="sr-only">{groupName} </span>
+          {optionLabel}
         </legend>
         <div className={`grid gap-1.5 ${sizes.length === 2 ? "grid-cols-2" : "grid-cols-3"}`}>
           {sizes.map(({ item, label, detail }, index) => (
@@ -33,7 +89,7 @@ function MenuSizePicker({
               <input
                 className="peer sr-only"
                 type="radio"
-                name={`${groupId}-size`}
+                name={`${groupId}-option`}
                 value={item.id}
                 checked={index === selectedIndex}
                 onChange={() => setSelectedIndex(index)}
@@ -131,6 +187,7 @@ export function MenuPage() {
         <div className="menu-grid">
           {items.map((item, index) => {
             const hasSizes = "sizes" in item;
+            const photos = MENU_PHOTO_ROTATIONS[item.id];
             return (
               <motion.article
                 key={item.id}
@@ -140,7 +197,11 @@ export function MenuPage() {
                 transition={{ delay: Math.min(index * 0.035, 0.22) }}
               >
                 <div className="menu-card-image">
-                  <img src={item.image} alt={item.name} loading="lazy" />
+                  {photos ? (
+                    <RotatingMenuPhoto photos={photos} name={item.name} />
+                  ) : (
+                    <img src={item.image} alt={item.name} loading="lazy" />
+                  )}
                   {item.tag && <span className="menu-tag">{item.tag}</span>}
                 </div>
                 <div className="menu-card-body">
@@ -151,9 +212,10 @@ export function MenuPage() {
                     )}
                   </div>
                   {hasSizes ? (
-                    <MenuSizePicker
+                    <MenuOptionPicker
                       groupId={item.id}
                       groupName={item.name}
+                      optionLabel={item.optionLabel}
                       sizes={item.sizes}
                       onAdd={addToOrder}
                     />
@@ -163,7 +225,7 @@ export function MenuPage() {
                       <div className="menu-card-footer">
                         <span>{item.unit}</span>
                         {item.price === null ? (
-                          <a href="tel:+16464498730">
+                          <a href={CATERING_PHONE.href}>
                             Call to order <span>↗</span>
                           </a>
                         ) : (
@@ -185,10 +247,14 @@ export function MenuPage() {
           </span>
           <div>
             <p>
-              Planning something bigger? <Link to="/contact">Ask us about full-service catering.</Link>
+              Planning something bigger?{" "}
+              <Link to="/catering/events">Explore rentals and full-service catering.</Link>
             </p>
             <p>
-              <Link to="/contact#room-rental">Room rental</Link> is {ROOM_RENTAL_RATE}.
+              For catering and orders, call <a href={CATERING_PHONE.href}>{CATERING_PHONE.label}</a>.
+            </p>
+            <p>
+              <Link to="/catering/events">Room rental</Link> is {ROOM_RENTAL_RATE}.
             </p>
           </div>
         </div>

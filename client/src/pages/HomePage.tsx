@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { STORE_PHONE } from "../lib/contact";
 import { findMenuItem, money } from "../lib/menu";
 import { useCart } from "../context/CartContext";
 import { StatusMessage } from "../components/StatusMessage";
@@ -265,7 +266,7 @@ export function HomePage() {
             From a cozy breakfast meeting to a proper long lunch, we’ll make the gathering taste like
             something special.
           </p>
-          <Link className="button button-navy" to="/menu#catering">
+          <Link className="button button-navy" to="/catering">
             Discover catering <span>↗</span>
           </Link>
           <span className="catering-note">BREAKFAST · LUNCH · A LITTLE BIT OF EVERYTHING</span>
@@ -286,7 +287,7 @@ export function HomePage() {
         <div className="visit-details">
           <span>676 Amsterdam Ave</span>
           <span>New York, NY 10025</span>
-          <a href="tel:+16464498730">(646) 449-8730</a>
+          <a href={STORE_PHONE.href}>{STORE_PHONE.label}</a>
           <Link className="text-arrow text-arrow-coral" to="/contact">
             Come on over <span>→</span>
           </Link>

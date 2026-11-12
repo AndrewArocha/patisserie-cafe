@@ -14,6 +14,8 @@ From this folder, install dependencies for the root tools and both apps, then co
 
 For production, set `CLIENT_ORIGIN=https://www.patisseriecafe.co` in Render and set `VITE_API_URL` to the deployed Render API URL ending in `/api` in Vercel before building. Password reset email needs outbound SMTP settings in Render: `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, and `SMTP_PASS`. The sender defaults to `contact@patisseriecafe.co` (`SMTP_FROM`). The custom-domain forwarding address receives mail; it does not by itself provide outbound SMTP credentials. Use credentials from the email provider and store them as Render secrets.
 
+Room rental and catering requests use the same SMTP settings and go to `CATERING_REQUEST_EMAIL`, which defaults to `contact@patisseriecafe.co`.
+
 ```sh
 npm run install:all
 npm run dev

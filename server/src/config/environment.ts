@@ -27,6 +27,7 @@ const environmentSchema = z.object({
   SMTP_USER: z.string().optional(),
   SMTP_PASS: z.string().optional(),
   SMTP_FROM: z.string().email().default("contact@patisseriecafe.co"),
+  CATERING_REQUEST_EMAIL: z.string().email().default("contact@patisseriecafe.co"),
 });
 
 const parsedEnvironment = environmentSchema.safeParse(process.env);

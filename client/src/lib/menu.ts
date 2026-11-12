@@ -27,7 +27,7 @@ export type MenuSizeOption = {
   item: MenuItem & { price: number };
 };
 
-type SizedMenuCard = MenuCardInfo & { sizes: MenuSizeOption[] };
+type SizedMenuCard = MenuCardInfo & { sizes: MenuSizeOption[]; optionLabel?: string };
 type SizeVariant = { id: string; price: number; description?: string };
 
 const CATERING_SIZES = [
@@ -75,6 +75,20 @@ const quiche = {
   category: "Sides",
   image: "/images/quiche.webp",
 } satisfies MenuCardInfo;
+
+const parveCakes = {
+  id: "parve_cakes",
+  name: "Parve cakes",
+  description: "Choose from a beautiful selection of Raspberry, Lemon, or Chocolate parve cakes.",
+  category: "Desserts",
+  image: "/images/parve-cakes.webp",
+} satisfies MenuCardInfo;
+
+const soupPhotos = [
+  "/images/chunky-moroccan-soup.webp",
+  "/images/everyday-minestrone-soup.webp",
+  "/images/warm-cucumber-soup.webp",
+];
 
 export const MENU_ITEMS: (MenuItem | SizedMenuCard)[] = [
   cateringSizes(
@@ -329,6 +343,22 @@ export const MENU_ITEMS: (MenuItem | SizedMenuCard)[] = [
     category: "Salads",
     image: "/images/egg-salad.jpg",
   }),
+  saladSizes({
+    id: "salad_of_the_day",
+    name: "Salad of the day",
+    description: "A fresh, assorted special salad of the day to surprise your palate.",
+    category: "Salads",
+    image: "/images/tomato-mozzarella.jpg",
+  }),
+  {
+    id: "soup_of_the_day",
+    name: "Soup of the day",
+    description: "Vegetarian soup of the day, served in an 8 oz portion.",
+    category: "Soups",
+    price: 6.95,
+    unit: "8 oz portion",
+    image: soupPhotos[0],
+  },
   {
     id: "frittata",
     name: "Garden frittata",
@@ -404,7 +434,21 @@ export const MENU_ITEMS: (MenuItem | SizedMenuCard)[] = [
     unit: "per person",
     image: "/images/pasta-salad.webp",
   },
+  {
+    ...parveCakes,
+    optionLabel: "Flavor",
+    sizes: ["Raspberry", "Lemon", "Chocolate"].map((flavor) =>
+      sizeOption(parveCakes, { id: `parve_cake_${flavor.toLowerCase()}`, price: 40 }, flavor, "9-inch cake"),
+    ),
+  },
 ];
+
+export const MENU_PHOTO_ROTATIONS: Partial<Record<string, string[]>> = {
+  salad_of_the_day: MENU_ITEMS.flatMap((item) =>
+    item.category === "Salads" && item.id !== "salad_of_the_day" && item.image ? [item.image] : [],
+  ),
+  soup_of_the_day: soupPhotos,
+};
 
 const menuItemsById = new Map(
   MENU_ITEMS.flatMap((item) => ("sizes" in item ? item.sizes.map((option) => option.item) : [item])).map(
@@ -423,7 +467,9 @@ export const categories = [
   "À la carte",
   "Sandwiches",
   "Salads",
+  "Soups",
   "Sides",
+  "Desserts",
 ] as const;
 
 export const money = (amount: number) =>

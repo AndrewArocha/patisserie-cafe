@@ -2,11 +2,12 @@ import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useCurrentUser } from "../context/CurrentUserContext";
+import { STORE_PHONE } from "../lib/contact";
 import { StatusMessage } from "./StatusMessage";
 
 const navItems = [
   { label: "Our menu", to: "/menu" },
-  { label: "Catering", to: "/menu#catering" },
+  { label: "Catering", to: "/catering" },
   { label: "About us", to: "/about" },
   { label: "Contact us", to: "/contact" },
 ];
@@ -23,7 +24,7 @@ export function SiteHeader() {
       <div className="top-note">
         <span>New York · Upper West Side</span>
         <span>100% Kosher · Tartikov supervised</span>
-        <a href="tel:+16464498730">(646) 449-8730</a>
+        <a href={STORE_PHONE.href}>{STORE_PHONE.label}</a>
       </div>
       <div className="nav-wrap">
         <Link className="brand-lockup" to="/" aria-label="Patisserie Café home" onClick={closeMobile}>

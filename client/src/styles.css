@@ -79,7 +79,7 @@ body {
   margin: 0;
   min-width: 320px;
 }
-body:has(.about-photo-dialog[open], .navigation-dialog[open]) {
+body:has(.about-photo-dialog[open], .navigation-dialog[open], .catering-request-dialog[open]) {
   overflow: hidden;
 }
 button,

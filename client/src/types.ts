@@ -17,7 +17,7 @@ export interface MenuItem {
   id: string;
   name: string;
   description: string;
-  category: "Breakfast" | "Lunch" | "À la carte" | "Sandwiches" | "Salads" | "Sides";
+  category: "Breakfast" | "Lunch" | "À la carte" | "Sandwiches" | "Salads" | "Soups" | "Sides" | "Desserts";
   price: number | null;
   unit: string;
   image?: string;
