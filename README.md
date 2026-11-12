@@ -1,34 +1,27 @@
 # Patisserie Café
 
-A React and TypeScript storefront for Patisserie Café at 676 Amsterdam Ave, New York, NY 10025. The client provides menu, contact, account, and order routes. The Express API provides account management, customer-owned orders, and a Stripe Checkout integration that never handles raw card details.
+A storefront for Patisserie Café in New York. Customers can browse the menu, create an account, manage their orders, and pay through hosted Stripe Checkout. The storefront does not handle raw card details.
 
-## Requirements
+[Visit the storefront](https://www.patisseriecafe.co/)
 
-- Node.js 20.19+ or 22.12+
-- MongoDB
-- Stripe account and API secret for live checkout
+**Stack:** React, TypeScript, Vite, Tailwind CSS, Express, MongoDB, and Stripe.
 
-## Setup
+## Run locally
 
-From this folder, install dependencies for the root tools and both apps, then copy `server/.env.example` to `server/.env`. Set `MONGODB_URI`, a long random `JWT_SECRET` (32+ characters), and `CLIENT_ORIGIN`. Set `STRIPE_SECRET_KEY` to enable hosted checkout. Enable Stripe Tax and register the applicable tax locations in Stripe before accepting live payments; checkout collects a billing address and asks Stripe Tax to calculate applicable tax. Set `VITE_API_URL` in `client/.env` when the API is not at `http://localhost:4000/api`.
+You'll need Node.js 24, npm, and a running MongoDB instance.
 
-For production, set `CLIENT_ORIGIN=https://www.patisseriecafe.co` in Render and set `VITE_API_URL` to the deployed Render API URL ending in `/api` in Vercel before building. Password reset email needs outbound SMTP settings in Render: `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, and `SMTP_PASS`. The sender defaults to `contact@patisseriecafe.co` (`SMTP_FROM`). The custom-domain forwarding address receives mail; it does not by itself provide outbound SMTP credentials. Use credentials from the email provider and store them as Render secrets.
+1. Run `npm run install:all` from the repository root.
+2. Copy [`server/.env.example`](./server/.env.example) to `server/.env`. Set `MONGODB_URI` and replace `JWT_SECRET` with a long random value (at least 32 characters). The example sets the API port to `3000` and the client origin to `http://localhost:3001`.
+3. Copy [`client/.env.example`](./client/.env.example) to `client/.env`. Its default is `VITE_API_URL=http://localhost:3000/api`.
+4. Run `npm run dev`. Open [http://localhost:3001](http://localhost:3001) for the storefront or [http://localhost:3000/api/health](http://localhost:3000/api/health) to check the API.
 
-Room rental and catering requests use the same SMTP settings and go to `CATERING_REQUEST_EMAIL`, which defaults to `contact@patisseriecafe.co`.
+Run `npm run lint` to check both apps or `npm run build` to compile them. `npm start` serves the compiled API; the client build is in `client/dist`.
 
-```sh
-npm run install:all
-npm run dev
-```
+## Deployment and integrations
 
-The Vite client runs at `http://localhost:5173` and the API at `http://localhost:4000/api`. To compile both workspaces and serve the compiled API:
-
-```sh
-npm run build
-npm start
-```
-
-For production, serve the built client (`client/dist`) from a static host and set `VITE_API_URL` at build time. Keep server secrets only in the server environment. The API intentionally returns 404 for protected routes when the bearer token is missing or invalid. The public `/api/health` response is stable and does not inspect authentication.
+- **Hosting:** Set `CLIENT_ORIGIN` to the public storefront origin in Render. Set `VITE_API_URL` in Vercel to the deployed API URL ending in `/api` before building.
+- **Checkout:** Set `STRIPE_SECRET_KEY` on the server. Use a Stripe test key for local checkout testing. Before accepting live payments, configure the production return URLs and set up Stripe Tax and applicable registrations. Checkout collects a billing address for tax calculation.
+- **Email:** Password resets and room rental or catering requests require outbound SMTP settings: `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, and `SMTP_PASS`. The sender and catering recipient can be configured with `SMTP_FROM` and `CATERING_REQUEST_EMAIL`. An inbound forwarding address alone does not provide outbound SMTP credentials.
 
 ## API outline
 
