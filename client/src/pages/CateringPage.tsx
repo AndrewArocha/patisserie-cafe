@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { CateringRequestDialog } from "../components/CateringRequestDialog";
 import { cateringEvents, type EventType } from "../lib/catering";
+import { CATERING_EMAIL } from "../lib/contact";
 import { ROOM_RENTAL_RATE } from "../lib/menu";
 
 const cateringChoices = [
@@ -132,6 +133,15 @@ export function CateringEventsPage() {
             );
           })}
         </div>
+        <p className="mt-6! text-ink/80">
+          Catering questions?{" "}
+          <a
+            href={`mailto:${CATERING_EMAIL}`}
+            className="font-semibold text-terracotta! underline underline-offset-3"
+          >
+            {CATERING_EMAIL}
+          </a>
+        </p>
       </section>
       {requestType && <CateringRequestDialog eventType={requestType} onClose={() => setRequestType(null)} />}
     </main>

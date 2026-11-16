@@ -7,8 +7,55 @@ import { useCurrentUser } from "../context/CurrentUserContext";
 import { ApiError, api } from "../lib/api";
 import { CATERING_PHONE } from "../lib/contact";
 import { MINIMUM_QUANTITIES, money } from "../lib/menu";
+import { spotOnOrderUrl } from "../lib/ordering";
 
 export function OrderPage() {
+  const [searchParams] = useSearchParams();
+  const isStripeReturn = searchParams.get("checkout") === "success" && searchParams.has("session_id");
+
+  if (spotOnOrderUrl && !isStripeReturn) {
+    return <HostedOrderPage orderUrl={spotOnOrderUrl} />;
+  }
+
+  return <LegacyOrderPage />;
+}
+
+function HostedOrderPage({ orderUrl }: { orderUrl: string }) {
+  const { entries } = useCart();
+
+  return (
+    <main className="section-pad">
+      <h1 className="font-display text-4xl tracking-tight sm:text-5xl">Order online</h1>
+      <p className="mt-3! max-w-lg text-ink/80">Choose your items and check out on SpotOn.</p>
+      <a className="button button-navy mt-5" href={orderUrl}>
+        Start your order <span aria-hidden="true">↗</span>
+      </a>
+      {entries.length > 0 && (
+        <section aria-labelledby="previous-bag" className="mt-8 max-w-lg border border-ink/15 p-5">
+          <h2 id="previous-bag" className="font-display text-xl">
+            Your previous bag
+          </h2>
+          <p className="mt-2! text-sm text-ink/80">Use this list as a reference when ordering on SpotOn.</p>
+          <ul className="mt-3 divide-y divide-ink/15">
+            {entries.map(({ item, quantity }) => (
+              <li key={item.id} className="py-2">
+                {quantity} × {item.name}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+      <p className="mt-5! text-sm">
+        Need help ordering?{" "}
+        <a className="font-semibold underline underline-offset-2" href={CATERING_PHONE.href}>
+          {CATERING_PHONE.label}
+        </a>
+      </p>
+    </main>
+  );
+}
+
+function LegacyOrderPage() {
   const { currentUser } = useCurrentUser();
   const { entries, setQuantity, removeItem, cartTotal, clearCart } = useCart();
   const redirectToCheckout = useCheckoutRedirect();
@@ -220,27 +267,35 @@ export function OrderPage() {
             </a>
             .
           </p>
-          {currentUser ? (
-            <div className="signed-in-note">
-              Checkout as <strong>{currentUser.email}</strong>
-            </div>
+          {spotOnOrderUrl ? (
+            <a href={spotOnOrderUrl} className="button button-navy checkout-button">
+              Start a new order on SpotOn <span aria-hidden="true">↗</span>
+            </a>
           ) : (
-            <div className="sign-in-note">
-              Have an account? <Link to="/account">Sign in</Link> to continue.
-            </div>
+            <>
+              {currentUser ? (
+                <div className="signed-in-note">
+                  Checkout as <strong>{currentUser.email}</strong>
+                </div>
+              ) : (
+                <div className="sign-in-note">
+                  Have an account? <Link to="/account">Sign in</Link> to continue.
+                </div>
+              )}
+              <button
+                className="button button-navy checkout-button"
+                disabled={!entries.length || isSubmitting}
+                onClick={() => void handleCheckout()}
+              >
+                {isSubmitting ? "Preparing checkout…" : "Continue to secure checkout"}
+                <span>↗</span>
+              </button>
+              {isSubmitting && <LoadingState label="Saving your order securely…" />}
+              <p className="secure-note">
+                <span>♧</span> Payments handled securely by Stripe
+              </p>
+            </>
           )}
-          <button
-            className="button button-navy checkout-button"
-            disabled={!entries.length || isSubmitting}
-            onClick={() => void handleCheckout()}
-          >
-            {isSubmitting ? "Preparing checkout…" : "Continue to secure checkout"}
-            <span>↗</span>
-          </button>
-          {isSubmitting && <LoadingState label="Saving your order securely…" />}
-          <p className="secure-note">
-            <span>♧</span> Payments handled securely by Stripe
-          </p>
         </aside>
       </section>
     </main>

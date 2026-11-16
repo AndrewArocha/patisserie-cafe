@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState } f
 import type { MouseEvent, ReactNode } from "react";
 import { Link, matchPath, useBlocker, useLocation } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { spotOnOrderUrl } from "../lib/ordering";
 
 type OutboundLink = {
   href: string;
@@ -121,7 +122,7 @@ function NavigationDialog({
 export function NavigationPrompts({ children }: { children: ReactNode }) {
   const { pathname } = useLocation();
   const { cartCount } = useCart();
-  const hasUnfinishedOrder = Boolean(matchPath("/order", pathname)) && cartCount > 0;
+  const hasUnfinishedOrder = !spotOnOrderUrl && Boolean(matchPath("/order", pathname)) && cartCount > 0;
   const blocker = useBlocker(
     ({ nextLocation }) => hasUnfinishedOrder && !matchPath("/order", nextLocation.pathname),
   );
@@ -167,6 +168,7 @@ export function NavigationPrompts({ children }: { children: ReactNode }) {
     const anchor = event.target.closest<HTMLAnchorElement>("a[href]");
     if (!anchor || anchor.hasAttribute("download")) return;
     const url = new URL(anchor.href, window.location.href);
+    if (url.href === spotOnOrderUrl) return;
     const isExternalWeb =
       (url.protocol === "http:" || url.protocol === "https:") && url.origin !== window.location.origin;
     if (!isExternalWeb && url.protocol !== "tel:" && url.protocol !== "mailto:") return;

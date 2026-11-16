@@ -7,7 +7,7 @@ import {
   type CateringRequest,
   type EventType,
 } from "../lib/catering";
-import { CATERING_PHONE } from "../lib/contact";
+import { CATERING_EMAIL, CATERING_PHONE } from "../lib/contact";
 import { ROOM_RENTAL_RATE } from "../lib/menu";
 import { RequestDatePicker, formatRequestDate } from "./RequestDatePicker";
 import { StatusMessage } from "./StatusMessage";
@@ -37,7 +37,7 @@ function ServiceCheck() {
   );
 }
 
-function RequestSummary({ details }: { details: CateringRequest }) {
+function requestRows(details: CateringRequest) {
   const rows = [
     ["Event", cateringEvents[details.eventType].requestTitle],
     ["Date", formatRequestDate(details.date)],
@@ -53,10 +53,24 @@ function RequestSummary({ details }: { details: CateringRequest }) {
       ["Audio visual", details.audioVisual ? "Requested" : "None requested"],
     );
   }
+  return rows;
+}
+
+function requestDraft(details: CateringRequest) {
+  const subject = `Catering request · ${cateringEvents[details.eventType].requestTitle}`;
+  const rows = requestRows(details);
+  if (details.eventType === "full-service") {
+    rows.push(["Requested services", details.services.join(", ") || "None selected"]);
+  }
+  const body = rows.map(([label, value]) => `${label}: ${value}`).join("\r\n");
+  return `mailto:${CATERING_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+function RequestSummary({ details }: { details: CateringRequest }) {
   return (
     <div className="grid gap-4">
       <dl className="divide-y divide-ink/10 border-y border-ink/10">
-        {rows.map(([label, value]) => (
+        {requestRows(details).map(([label, value]) => (
           <div key={label} className="grid grid-cols-[minmax(5.5rem,0.5fr)_1fr] gap-2 py-2 sm:gap-4">
             <dt className="font-semibold">{label}</dt>
             <dd className="wrap-anywhere">{value}</dd>
@@ -310,16 +324,28 @@ export function CateringRequestDialog({ eventType, onClose }: { eventType: Event
           {sent && (
             <StatusMessage kind="success">The café will contact you to confirm availability.</StatusMessage>
           )}
+          {!sent && (
+            <p className="text-ink/75">Send your request to the catering team to confirm availability.</p>
+          )}
           <RequestSummary details={review} />
           {error && (
             <div>
               <StatusMessage kind="error">{error}</StatusMessage>
-              <a
-                href={CATERING_PHONE.href}
-                className="font-semibold text-terracotta! underline underline-offset-3"
-              >
-                Call catering {CATERING_PHONE.label}
-              </a>
+              <div className="flex flex-wrap gap-x-5 gap-y-2">
+                <a
+                  href={requestDraft(review)}
+                  data-destination="your email app"
+                  className="font-semibold text-terracotta! underline underline-offset-3"
+                >
+                  Open email draft
+                </a>
+                <a
+                  href={CATERING_PHONE.href}
+                  className="font-semibold text-terracotta! underline underline-offset-3"
+                >
+                  Call catering {CATERING_PHONE.label}
+                </a>
+              </div>
             </div>
           )}
           <div className="flex flex-wrap justify-end gap-3">

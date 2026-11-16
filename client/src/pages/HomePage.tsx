@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { STORE_PHONE } from "../lib/contact";
+import { spotOnOrderUrl } from "../lib/ordering";
 import { findMenuItem, money } from "../lib/menu";
 import { useCart } from "../context/CartContext";
 import { StatusMessage } from "../components/StatusMessage";
@@ -227,9 +228,11 @@ export function HomePage() {
               <div className="favorite-photo">
                 <img src={item.image ?? "/images/caprese-salad.png"} alt={item.name} />
                 <span className="favorite-number">0{index + 1}</span>
-                <button onClick={() => addFavorite(item)} aria-label={`Add ${item.name} to order`}>
-                  ＋
-                </button>
+                {!spotOnOrderUrl && (
+                  <button onClick={() => addFavorite(item)} aria-label={`Add ${item.name} to order`}>
+                    ＋
+                  </button>
+                )}
               </div>
               <div className="favorite-meta">
                 <div>

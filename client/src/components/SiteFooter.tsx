@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { spotOnOrderUrl } from "../lib/ordering";
 import { CATERING_PHONE, STORE_PHONE } from "../lib/contact";
 
 export function SiteFooter() {
@@ -32,8 +33,8 @@ export function SiteFooter() {
           
         <div>
           <span className="footer-label">Say bonjour</span>
-          <a href={STORE_PHONE.href}>Store {STORE_PHONE.label}</a>
-          <a href={CATERING_PHONE.href}>Catering &amp; orders {CATERING_PHONE.label}</a>
+          <a href={STORE_PHONE.href}>Store: {STORE_PHONE.label}</a>
+          <a href={CATERING_PHONE.href}>Catering &amp; orders: {CATERING_PHONE.label}</a>
           <a href="mailto:contact@patisseriecafe.co">contact@patisseriecafe.co</a>
           <Link to="/contact">Get directions</Link>
         </div>
@@ -42,7 +43,11 @@ export function SiteFooter() {
           <Link to="/menu">Our menu</Link>
           <Link to="/catering">Catering</Link>
           <Link to="/about">About us</Link>
-          <Link to="/order">Order online</Link>
+          {spotOnOrderUrl ? (
+            <a href={spotOnOrderUrl}>Order online</a>
+          ) : (
+            <Link to="/order">Order online</Link>
+          )}
         </div>
         <div>
         </div>

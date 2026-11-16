@@ -15,6 +15,7 @@ const environmentSchema = z.object({
   JWT_SECRET: z.string().min(32, "JWT_SECRET must contain at least 32 characters."),
   JWT_EXPIRES_IN: z.string().default(DEFAULT_JWT_EXPIRY),
   PASSWORD_MIN_LENGTH: z.coerce.number().int().min(10).default(DEFAULT_PASSWORD_MIN_LENGTH),
+  CHECKOUT_PROVIDER: z.enum(["stripe", "spoton"]).default("stripe"),
   STRIPE_SECRET_KEY: z.string().optional(),
   STRIPE_SUCCESS_URL: z.string().url().default("http://localhost:5173/order?checkout=success"),
   STRIPE_CANCEL_URL: z.string().url().default("http://localhost:5173/order?checkout=cancel"),
@@ -27,7 +28,10 @@ const environmentSchema = z.object({
   SMTP_USER: z.string().optional(),
   SMTP_PASS: z.string().optional(),
   SMTP_FROM: z.string().email().default("contact@patisseriecafe.co"),
-  CATERING_REQUEST_EMAIL: z.string().email().default("contact@patisseriecafe.co"),
+  CATERING_REQUEST_EMAIL: z.string().email().default("catering@patisseriecafe.co"),
+  CLOUDFLARE_EMAIL_ACCOUNT_ID: z.string().trim().optional(),
+  CLOUDFLARE_EMAIL_API_TOKEN: z.string().trim().optional(),
+  CLOUDFLARE_EMAIL_FROM: z.string().email().optional(),
 });
 
 const parsedEnvironment = environmentSchema.safeParse(process.env);

@@ -129,6 +129,7 @@ export const ERROR_MESSAGES = {
   passwordTooShort: (minimum: number) => `Password must be at least ${minimum} characters long.`,
   orderMinimum: (name: string, minimum: number) => `${name} requires a minimum quantity of ${minimum}.`,
   stripeMissing: `Online payment is being set up. Call our orders line at ${ORDERS_PHONE} to place your order.`,
+  spotOnCheckoutRequired: "Online orders are now placed on SpotOn. Visit the café menu to start your order.",
   invalidEnvironment: "Server environment configuration is invalid.",
   passwordResetEmailSubject: "Reset your Patisserie Café password",
 } as const;

@@ -12,6 +12,7 @@ import {
   ROOM_RENTAL_RATE,
   type MenuSizeOption,
 } from "../lib/menu";
+import { spotOnOrderUrl } from "../lib/ordering";
 import type { MenuItem } from "../types";
 
 function RotatingMenuPhoto({ photos, name }: { photos: string[]; name: string }) {
@@ -116,6 +117,32 @@ function MenuOptionPicker({
   );
 }
 
+function MenuOptionPrices({
+  sizes,
+  optionLabel = "Size",
+}: {
+  sizes: MenuSizeOption[];
+  optionLabel?: string;
+}) {
+  return (
+    <div className="pb-2">
+      <p className="mb-2 text-sm font-semibold text-ink">{optionLabel}</p>
+      <dl className={`grid gap-1.5 ${sizes.length === 2 ? "grid-cols-2" : "grid-cols-3"}`}>
+        {sizes.map(({ item, label, detail }) => (
+          <div
+            key={item.id}
+            className="grid justify-items-center border border-ink/15 px-1 py-2 text-center text-sm leading-tight"
+          >
+            <dt className="font-semibold">{label}</dt>
+            <dd>{detail}</dd>
+            <dd className="mt-1 font-semibold tabular-nums">{money(item.price)}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  );
+}
+
 export function MenuPage() {
   const [category, setCategory] = useState<string>("All");
   const [message, setMessage] = useState("");
@@ -170,6 +197,14 @@ export function MenuPage() {
             apply.
           </p>
         </div>
+        {spotOnOrderUrl && (
+          <div className="mb-5 flex flex-wrap items-center justify-between gap-3 border-y border-ink/15 bg-cream p-4">
+            <p>Choose your items and check out on SpotOn.</p>
+            <a className="button button-navy" href={spotOnOrderUrl}>
+              Start your order <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        )}
         <div className="category-tabs" role="tablist" aria-label="Menu categories">
           {categories.map((name) => (
             <button
@@ -211,7 +246,7 @@ export function MenuPage() {
                       <strong>{item.price === null ? "Call for pricing" : money(item.price)}</strong>
                     )}
                   </div>
-                  {hasSizes ? (
+                  {hasSizes && !spotOnOrderUrl ? (
                     <MenuOptionPicker
                       groupId={item.id}
                       groupName={item.name}
@@ -222,18 +257,24 @@ export function MenuPage() {
                   ) : (
                     <>
                       <p>{item.description}</p>
-                      <div className="menu-card-footer">
-                        <span>{item.unit}</span>
-                        {item.price === null ? (
-                          <a href={CATERING_PHONE.href}>
-                            Call to order <span>↗</span>
-                          </a>
-                        ) : (
-                          <button onClick={() => addToOrder(item)}>
-                            Add to order <span>＋</span>
-                          </button>
-                        )}
-                      </div>
+                      {hasSizes ? (
+                        <MenuOptionPrices sizes={item.sizes} optionLabel={item.optionLabel} />
+                      ) : (
+                        <div className="menu-card-footer">
+                          <span>{item.unit}</span>
+                          {item.price === null ? (
+                            <a href={CATERING_PHONE.href}>
+                              Call to order <span>↗</span>
+                            </a>
+                          ) : (
+                            !spotOnOrderUrl && (
+                              <button onClick={() => addToOrder(item)}>
+                                Add to order <span>＋</span>
+                              </button>
+                            )
+                          )}
+                        </div>
+                      )}
                     </>
                   )}
                 </div>
@@ -241,6 +282,11 @@ export function MenuPage() {
             );
           })}
         </div>
+        {spotOnOrderUrl && (
+          <a className="button button-navy mt-8" href={spotOnOrderUrl}>
+            Order on SpotOn <span aria-hidden="true">↗</span>
+          </a>
+        )}
         <div className="menu-bottom-note">
           <span className="tiny-spark" aria-hidden="true">
             ✳

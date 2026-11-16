@@ -8,6 +8,9 @@ import { validateAndPriceItems } from "../services/orderService.js";
 import { z } from "zod";
 
 export const createCheckoutSession: RequestHandler = async (request, response) => {
+  if (environment.CHECKOUT_PROVIDER === "spoton") {
+    throw new ApiError(409, ERROR_MESSAGES.spotOnCheckoutRequired);
+  }
   if (!environment.STRIPE_SECRET_KEY) throw new ApiError(503, ERROR_MESSAGES.stripeMissing);
   const { orderId } = request.body as { orderId: string };
   if (!orderId) throw new ApiError(400, HTTP_MESSAGES.badRequest);

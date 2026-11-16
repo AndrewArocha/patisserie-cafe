@@ -3,6 +3,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useCurrentUser } from "../context/CurrentUserContext";
 import { STORE_PHONE } from "../lib/contact";
+import { spotOnOrderUrl } from "../lib/ordering";
 import { StatusMessage } from "./StatusMessage";
 
 const navItems = [
@@ -70,9 +71,18 @@ export function SiteHeader() {
               Sign in
             </NavLink>
           )}
-          <Link className="button button-navy nav-order" to="/order" onClick={closeMobile}>
-            Order online <span className="cart-badge">{cartCount || "↗"}</span>
-          </Link>
+          {spotOnOrderUrl ? (
+            <a className="button button-navy nav-order" href={spotOnOrderUrl} onClick={closeMobile}>
+              Order online{" "}
+              <span className="cart-badge" aria-hidden="true">
+                ↗
+              </span>
+            </a>
+          ) : (
+            <Link className="button button-navy nav-order" to="/order" onClick={closeMobile}>
+              Order online <span className="cart-badge">{cartCount || "↗"}</span>
+            </Link>
+          )}
         </nav>
       </div>
       {!currentUser &&

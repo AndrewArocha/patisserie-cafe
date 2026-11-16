@@ -20,8 +20,10 @@ Run `npm run lint` to check both apps or `npm run build` to compile them. `npm s
 ## Deployment and integrations
 
 - **Hosting:** Set `CLIENT_ORIGIN` to the public storefront origin in Render. Set `VITE_API_URL` in Vercel to the deployed API URL ending in `/api` before building.
-- **Checkout:** Set `STRIPE_SECRET_KEY` on the server. Use a Stripe test key for local checkout testing. Before accepting live payments, configure the production return URLs and set up Stripe Tax and applicable registrations. Checkout collects a billing address for tax calculation.
-- **Email:** Password resets and room rental or catering requests require outbound SMTP settings: `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, and `SMTP_PASS`. The sender and catering recipient can be configured with `SMTP_FROM` and `CATERING_REQUEST_EMAIL`. An inbound forwarding address alone does not provide outbound SMTP credentials.
+- **SpotOn hosted ordering:** Set `VITE_SPOTON_ORDER_URL` to the café’s public SpotOn ordering URL before building the client. Customers browse the café menu and build their order on SpotOn. Set `CHECKOUT_PROVIDER=spoton` on the API at cutover to prevent new Stripe sessions. Verify the ordering URL, menu, and order routing from a customer connection before switching.
+- **Legacy checkout:** With `CHECKOUT_PROVIDER=stripe` and the SpotOn URL unset, the storefront uses Stripe Checkout. Use a Stripe test key for local checkout testing. Preserve the existing Stripe secret and return URLs during cutover if completed Stripe sessions still need confirmation.
+- **Email:** Password resets use `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`, and `SMTP_FROM`. Catering requests use the same SMTP settings by default and go to `catering@patisseriecafe.co`. Override the recipient with `CATERING_REQUEST_EMAIL`.
+- **Catering email over HTTPS:** Set `CLOUDFLARE_EMAIL_ACCOUNT_ID`, `CLOUDFLARE_EMAIL_API_TOKEN` with Email Sending permission, and `CLOUDFLARE_EMAIL_FROM` on a sending domain enabled in Cloudflare. This takes precedence over SMTP for catering requests. On a plan limited to verified destinations, set `CATERING_REQUEST_EMAIL` to the verified inbox itself. Keep the public alias for direct inquiries.
 
 ## API outline
 
@@ -31,5 +33,6 @@ Run `npm run lint` to check both apps or `npm run build` to compile them. `npm s
 - `GET /api/users/me`, `DELETE /api/users/me` — authenticated current account
 - `GET /api/orders`, `POST /api/orders`, `DELETE /api/orders/:id` — authenticated owner-scoped orders
 - `POST /api/payments/checkout` — authenticated Stripe Checkout session
+- `POST /api/catering/requests` — public, rate limited, emails the catering team after review
 
 All protected responses exclude password hashes. Order data is selected and scoped by its owner. Validation runs before database operations, errors are handled centrally, and database connection pooling is capped.
