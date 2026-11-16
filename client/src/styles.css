@@ -845,15 +845,13 @@ h2 em {
   width: 100%;
   height: auto;
 }
-.contact-image,
-.order-hero-image {
+.contact-image {
   position: relative;
   height: 300px;
   overflow: hidden;
   border-radius: 170px 170px 4px 4px;
 }
-.contact-image img,
-.order-hero-image img {
+.contact-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -1247,13 +1245,6 @@ h2 em {
   color: #77716b;
   font-size: var(--type-reading);
   line-height: 1.8;
-}
-.order-hero {
-  min-height: 360px;
-}
-.order-hero-image {
-  height: 248px;
-  border-radius: 2px;
 }
 .remove-item {
   padding: 0;
@@ -1782,8 +1773,7 @@ h2 em {
   .page-hero-copy > p:not(.eyebrow) {
     margin-top: 15px;
   }
-  .contact-image,
-  .order-hero-image {
+  .contact-image {
     height: 245px;
   }
   .page-hero-ornament {
@@ -1862,9 +1852,6 @@ h2 em {
   }
   .contact-cta h2 {
     font-size: 43px;
-  }
-  .order-hero {
-    gap: 25px;
   }
   .account-page {
     padding-top: 49px;

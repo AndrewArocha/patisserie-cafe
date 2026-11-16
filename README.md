@@ -22,8 +22,8 @@ Run `npm run lint` to check both apps or `npm run build` to compile them. `npm s
 - **Hosting:** Set `CLIENT_ORIGIN` to the public storefront origin in Render. Set `VITE_API_URL` in Vercel to the deployed API URL ending in `/api` before building.
 - **SpotOn hosted ordering:** The café’s public SpotOn link is built into the storefront. Set `VITE_SPOTON_ORDER_URL` before building the client if the link changes. SpotOn handles checkout and sends the customer confirmation. Verify the published menu, test order routing, and confirm receipt delivery from a customer connection.
 - **Order history:** The café account retains its historical order records. To sync new SpotOn orders, obtain SpotOn partner access for the café location with `reporting:orders:read` and verify the API can identify hosted orders and link them securely to the correct café account. The old order creation and checkout endpoints return HTTP 410. Keep `STRIPE_SECRET_KEY` only if the legacy session verification endpoint is still needed.
-- **Email:** Password resets use `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`, and `SMTP_FROM`. Catering requests use the same SMTP settings by default and go to `catering@patisseriecafe.co`. Override the recipient with `CATERING_REQUEST_EMAIL`.
-- **Catering email over HTTPS:** Set `CLOUDFLARE_EMAIL_ACCOUNT_ID`, `CLOUDFLARE_EMAIL_API_TOKEN` with Email Sending permission, and `CLOUDFLARE_EMAIL_FROM` on a sending domain enabled in Cloudflare. This takes precedence over SMTP for catering requests. On a plan limited to verified destinations, set `CATERING_REQUEST_EMAIL` to the verified inbox itself. Keep the public alias for direct inquiries.
+- **Email:** Password resets use `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`, and `SMTP_FROM`. Catering requests use the same SMTP settings when Cloudflare Email Sending is not configured. Staff requests go to `catering@patisseriecafe.co` by default (override with `CATERING_REQUEST_EMAIL`). The customer receives a receipt after the staff email is accepted. Staff can reply to the customer's email directly to approve or decline.
+- **Catering email over HTTPS:** On Render, set `CLOUDFLARE_EMAIL_ACCOUNT_ID` and `CLOUDFLARE_EMAIL_API_TOKEN` with Email Sending permission. This takes precedence over SMTP for catering. The default sender is `catering@patisseriecafe.co` and its domain must be onboarded to Email Sending. An authorized sender override can be set via `CLOUDFLARE_EMAIL_FROM`. Cloudflare sending to arbitrary customer addresses requires Workers Paid. An inbound forwarding rule alone handles messages sent to the alias.
 
 ## API outline
 
@@ -33,6 +33,6 @@ Run `npm run lint` to check both apps or `npm run build` to compile them. `npm s
 - `GET /api/users/me`, `DELETE /api/users/me` — authenticated current account
 - `GET /api/orders`, `DELETE /api/orders/:id` — authenticated owner-scoped legacy orders
 - `GET /api/payments/sessions/:sessionId` — authenticated verification of previously created Stripe sessions
-- `POST /api/catering/requests` — public, rate limited, emails the catering team after review
+- `POST /api/catering/requests` — public, rate limited, emails the catering team and returns whether the customer receipt was accepted for delivery
 
 All protected responses exclude password hashes. Order data is selected and scoped by its owner. Validation runs before database operations, errors are handled centrally, and database connection pooling is capped.

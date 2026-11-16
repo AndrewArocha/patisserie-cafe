@@ -11,7 +11,7 @@ import {
   type CateringRequest,
   type EventType,
 } from "../lib/catering";
-import { CATERING_EMAIL, CATERING_PHONE } from "../lib/contact";
+import { CATERING_EMAIL } from "../lib/contact";
 import { ROOM_RENTAL_RATE } from "../lib/menu";
 import { RequestDatePicker, formatRequestDate } from "./RequestDatePicker";
 import { StatusMessage } from "./StatusMessage";
@@ -110,7 +110,7 @@ export function CateringRequestDialog({ eventType, onClose }: { eventType: Event
   const [startsAt, setStartsAt] = useState("");
   const [earliestStart, setEarliestStart] = useState(() => Date.now() + advanceNoticeMs);
   const [review, setReview] = useState<CateringRequest | null>(null);
-  const [sent, setSent] = useState(false);
+  const [sent, setSent] = useState<{ receiptSent?: boolean } | null>(null);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
   const [deliveryFailed, setDeliveryFailed] = useState(false);
@@ -179,8 +179,7 @@ export function CateringRequestDialog({ eventType, onClose }: { eventType: Event
     }
     setSending(true);
     try {
-      await api.requestCatering(review);
-      setSent(true);
+      setSent(await api.requestCatering(review));
     } catch (failure) {
       setDeliveryFailed(!(failure instanceof ApiError) || failure.status === 0 || failure.status >= 500);
       setError(
@@ -379,10 +378,19 @@ export function CateringRequestDialog({ eventType, onClose }: { eventType: Event
       {review && (
         <div className="mt-5 grid gap-4">
           <h3 ref={summaryHeading} tabIndex={-1} className="font-display text-xl outline-none">
-            {sent ? "Request sent" : "Review your request"}
+            {sent ? "Request received" : "Review your request"}
           </h3>
           {sent && (
-            <StatusMessage kind="success">The café will contact you to confirm availability.</StatusMessage>
+            <StatusMessage kind="success">
+              {sent.receiptSent
+                ? `Look for a receipt at ${review.email}. The catering team will email you after reviewing availability.`
+                : "Your request was sent to the catering team. They’ll email you after reviewing availability."}
+            </StatusMessage>
+          )}
+          {sent?.receiptSent === false && (
+            <StatusMessage kind="info">
+              We couldn’t send a receipt email. Your request is still pending review.
+            </StatusMessage>
           )}
           {!sent && (
             <p className="text-ink/75">Send your request to the catering team to confirm availability.</p>
@@ -392,21 +400,13 @@ export function CateringRequestDialog({ eventType, onClose }: { eventType: Event
             <div>
               <StatusMessage kind="error">{error || "Choose a later date or start time."}</StatusMessage>
               {deliveryFailed && !startExpired && (
-                <div className="flex flex-wrap gap-x-5 gap-y-2">
-                  <a
-                    href={requestDraft(review)}
-                    data-destination="your email app"
-                    className="font-semibold text-terracotta! underline underline-offset-3"
-                  >
-                    Open email draft
-                  </a>
-                  <a
-                    href={CATERING_PHONE.href}
-                    className="font-semibold text-terracotta! underline underline-offset-3"
-                  >
-                    Call catering {CATERING_PHONE.label}
-                  </a>
-                </div>
+                <a
+                  href={requestDraft(review)}
+                  data-destination="your email app"
+                  className="font-semibold text-terracotta! underline underline-offset-3"
+                >
+                  Email this request to catering
+                </a>
               )}
             </div>
           )}

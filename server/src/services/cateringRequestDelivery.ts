@@ -1,12 +1,11 @@
+import { CATERING_ADDRESS } from "../config/constants.js";
 import { environment } from "../config/environment.js";
 import type { CateringRequest } from "../validators/cateringSchemas.js";
 import { buildCateringRequestEmail } from "./cateringRequestEmail.js";
 import { emailTransport } from "./emailTransport.js";
 
-export async function sendCateringRequestEmail(details: CateringRequest) {
+async function sendCateringEmail(to: string, email: ReturnType<typeof buildCateringRequestEmail>) {
   const { CLOUDFLARE_EMAIL_ACCOUNT_ID: accountId, CLOUDFLARE_EMAIL_API_TOKEN: token } = environment;
-  const email = buildCateringRequestEmail(details);
-  const to = environment.CATERING_REQUEST_EMAIL;
 
   if (accountId && token) {
     const { replyTo, ...content } = email;
@@ -19,7 +18,7 @@ export async function sendCateringRequestEmail(details: CateringRequest) {
           ...content,
           from: {
             name: "Patisserie Café",
-            address: environment.CLOUDFLARE_EMAIL_FROM ?? environment.SMTP_FROM,
+            address: environment.CLOUDFLARE_EMAIL_FROM ?? CATERING_ADDRESS,
           },
           to,
           reply_to: replyTo,
@@ -27,22 +26,41 @@ export async function sendCateringRequestEmail(details: CateringRequest) {
         signal: AbortSignal.timeout(15_000),
       },
     );
-    if (!response.ok) throw new Error(`Cloudflare Email Sending returned HTTP ${response.status}.`);
+    if (!response.ok) {
+      throw Object.assign(new Error("Cloudflare Email Sending rejected the request."), {
+        code: `CLOUDFLARE_HTTP_${response.status}`,
+      });
+    }
     const result = (await response.json()) as {
       success?: boolean;
       result?: { delivered?: string[]; queued?: string[] };
     };
-    if (!result.success || !(result.result?.delivered?.length || result.result?.queued?.length)) {
-      throw new Error("Cloudflare did not accept the catering recipient.");
+    const accepted = [...(result.result?.delivered ?? []), ...(result.result?.queued ?? [])];
+    if (!result.success || !accepted.some((address) => address.toLowerCase() === to.toLowerCase())) {
+      throw Object.assign(new Error("Cloudflare did not accept the catering recipient."), {
+        code: "CLOUDFLARE_RECIPIENT_NOT_ACCEPTED",
+      });
     }
     return;
   }
 
-  if (!emailTransport) throw new Error("Catering email delivery is not configured.");
+  if (!emailTransport) {
+    throw Object.assign(new Error("Catering email delivery is not configured."), {
+      code: "CATERING_EMAIL_NOT_CONFIGURED",
+    });
+  }
   const delivery = await emailTransport.sendMail({
     ...email,
     from: `Patisserie Café <${environment.SMTP_FROM}>`,
     to,
   });
   if (!delivery.accepted.length) throw new Error("The mail server rejected the catering recipient.");
+}
+
+export async function sendCateringRequestEmail(details: CateringRequest) {
+  await sendCateringEmail(environment.CATERING_REQUEST_EMAIL, buildCateringRequestEmail(details));
+}
+
+export async function sendCateringReceipt(details: CateringRequest) {
+  await sendCateringEmail(details.email, buildCateringRequestEmail(details, "guest"));
 }

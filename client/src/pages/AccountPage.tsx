@@ -165,9 +165,7 @@ export function AccountPage() {
               Order online <span>→</span>
             </Link>
           </div>
-          <p className="mb-4! text-ink/75">
-            For new orders, check your SpotOn confirmation email for details.
-          </p>
+          <p className="mb-4! text-ink/75">For new orders, check your confirmation email for details.</p>
           {ordersLoading ? (
             <LoadingState label="Fetching your order history…" />
           ) : ordersMessage && !orders.length ? (

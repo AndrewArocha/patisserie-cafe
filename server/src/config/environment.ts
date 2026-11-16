@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { z } from "zod";
 import {
+  CATERING_ADDRESS,
   DEFAULT_JWT_EXPIRY,
   DEFAULT_PASSWORD_MIN_LENGTH,
   DEFAULT_PORT,
@@ -25,7 +26,7 @@ const environmentSchema = z.object({
   SMTP_USER: z.string().optional(),
   SMTP_PASS: z.string().optional(),
   SMTP_FROM: z.string().email().default("contact@patisseriecafe.co"),
-  CATERING_REQUEST_EMAIL: z.string().email().default("catering@patisseriecafe.co"),
+  CATERING_REQUEST_EMAIL: z.string().email().default(CATERING_ADDRESS),
   CLOUDFLARE_EMAIL_ACCOUNT_ID: z.string().trim().optional(),
   CLOUDFLARE_EMAIL_API_TOKEN: z.string().trim().optional(),
   CLOUDFLARE_EMAIL_FROM: z.string().email().optional(),

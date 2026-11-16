@@ -5,6 +5,7 @@ export const DEFAULT_JWT_EXPIRY = "2h";
 export const PASSWORD_RESET_TTL_MS = 30 * 60 * 1000;
 export const MAX_DATABASE_POOL_SIZE = 10;
 export const API_PREFIX = "/api";
+export const CATERING_ADDRESS = "catering@patisseriecafe.co";
 
 const ORDERS_PHONE = "(551) 241-8349";
 
@@ -37,7 +38,7 @@ export const ERROR_MESSAGES = {
   invalidCredentials: "Email or password is incorrect.",
   passwordTooShort: (minimum: number) => `Password must be at least ${minimum} characters long.`,
   stripeMissing: `Legacy payment verification is unavailable.`,
-  spotOnCheckoutRequired: "Online orders are now placed on SpotOn. Visit /order to start your order.",
+  spotOnCheckoutRequired: "Visit /order to start a new online order.",
   invalidEnvironment: "Server environment configuration is invalid.",
   passwordResetEmailSubject: "Reset your Patisserie Café password",
 } as const;

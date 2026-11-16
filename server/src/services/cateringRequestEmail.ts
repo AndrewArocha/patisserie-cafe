@@ -1,4 +1,5 @@
 import type { CateringRequest } from "../validators/cateringSchemas.js";
+import { CATERING_ADDRESS } from "../config/constants.js";
 
 const storefront = "https://www.patisseriecafe.co";
 const eventNames = {
@@ -45,7 +46,9 @@ function renderSection({ title, rows }: RequestSection) {
     </table>`;
 }
 
-export function buildCateringRequestEmail(details: CateringRequest) {
+export function buildCateringRequestEmail(details: CateringRequest, audience: "staff" | "guest" = "staff") {
+  const forGuest = audience === "guest";
+  const title = forGuest ? "We received your catering request" : "Catering request";
   const event = eventNames[details.eventType];
   const date = dateLabel.format(new Date(details.date));
   const phone = details.phone.replace(/^\+1(\d{3})(\d{3})(\d{4})$/, "+1 ($1) $2-$3");
@@ -78,11 +81,13 @@ export function buildCateringRequestEmail(details: CateringRequest) {
             ],
     },
   ];
-  const followUp = "Reply to this email to contact the guest and confirm availability.";
+  const followUp = forGuest
+    ? "Our catering team will review your request and email you about availability. Your event is pending approval. Reply to this email with any updates or questions."
+    : "Reply to this email to contact the guest and let them know whether the request can be approved.";
 
   const text = [
     "Patisserie Café",
-    "Catering request",
+    title,
     "Availability pending",
     ...sections.flatMap(({ title, rows }) => [
       "",
@@ -98,7 +103,7 @@ export function buildCateringRequestEmail(details: CateringRequest) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Catering request | Patisserie Café</title>
+  <title>${title} | Patisserie Café</title>
 </head>
 <body style="margin:0;padding:0;background:#f3eee6;color:#192b43;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.5;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#f3eee6">
@@ -124,7 +129,7 @@ export function buildCateringRequestEmail(details: CateringRequest) {
           <tr>
             <td style="padding:19px 20px 24px;">
               <p style="margin:0 0 5px;color:#28476a;font-size:13px;font-weight:bold;">Availability pending</p>
-              <h1 style="margin:0;color:#192b43;font-family:Georgia,serif;font-size:29px;line-height:1.15;">Catering request</h1>
+              <h1 style="margin:0;color:#192b43;font-family:Georgia,serif;font-size:29px;line-height:1.15;">${title}</h1>
               ${sections.map(renderSection).join("")}
               <p style="margin:22px 0 0;padding-top:13px;border-top:1px solid #d6e1ec;color:#28476a;font-size:14px;">${followUp}</p>
             </td>
@@ -138,8 +143,8 @@ export function buildCateringRequestEmail(details: CateringRequest) {
 </html>`;
 
   return {
-    subject: `Catering request · ${event} · ${details.date}`,
-    replyTo: details.email,
+    subject: `${title} · ${event} · ${details.date}`,
+    replyTo: forGuest ? CATERING_ADDRESS : details.email,
     text,
     html,
   };

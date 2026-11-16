@@ -51,7 +51,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 
 export const api = {
   requestCatering: (details: CateringRequest) =>
-    request<{ message: string }>("/catering/requests", {
+    request<{ message: string; receiptSent?: boolean }>("/catering/requests", {
       method: "POST",
       body: JSON.stringify(details),
       signal: AbortSignal.timeout(45_000),

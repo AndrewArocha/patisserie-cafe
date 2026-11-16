@@ -130,7 +130,7 @@ export function MenuPage() {
           </p>
         </div>
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3 border-y border-ink/15 bg-cream p-4">
-          <p>Choose your items and check out on SpotOn.</p>
+          <p>Build your order and check out online.</p>
           <Link className="button button-navy" to="/order">
             Order online <span aria-hidden="true">↗</span>
           </Link>
