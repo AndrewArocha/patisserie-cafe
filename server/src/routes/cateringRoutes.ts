@@ -1,3 +1,4 @@
+import { randomBytes } from "node:crypto";
 import { Router } from "express";
 import rateLimit from "express-rate-limit";
 import { HTTP_MESSAGES } from "../config/constants.js";
@@ -31,9 +32,10 @@ cateringRoutes.post(
   validateBody(cateringRequestSchema),
   async (request, response) => {
     const details = request.body as CateringRequest;
+    const requestCode = `CAT-${randomBytes(5).toString("hex").toUpperCase()}`;
 
     try {
-      await sendCateringRequestEmail(details);
+      await sendCateringRequestEmail(details, requestCode);
     } catch (error) {
       logCateringDeliveryFailure("staff", error);
       throw new ApiError(503, deliveryError);
@@ -41,13 +43,14 @@ cateringRoutes.post(
 
     let receiptSent = false;
     try {
-      await sendCateringReceipt(details);
+      await sendCateringReceipt(details, requestCode);
       receiptSent = true;
     } catch (error) {
       logCateringDeliveryFailure("guest receipt", error);
     }
 
     response.status(201).json({
+      requestCode,
       receiptSent,
       message: "Request received. The catering team will email you after reviewing availability.",
     });

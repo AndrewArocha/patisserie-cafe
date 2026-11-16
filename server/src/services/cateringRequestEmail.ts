@@ -46,7 +46,11 @@ function renderSection({ title, rows }: RequestSection) {
     </table>`;
 }
 
-export function buildCateringRequestEmail(details: CateringRequest, audience: "staff" | "guest" = "staff") {
+export function buildCateringRequestEmail(
+  details: CateringRequest,
+  requestCode: string,
+  audience: "staff" | "guest" = "staff",
+) {
   const forGuest = audience === "guest";
   const title = forGuest ? "We received your catering request" : "Catering request";
   const event = eventNames[details.eventType];
@@ -56,6 +60,7 @@ export function buildCateringRequestEmail(details: CateringRequest, audience: "s
     {
       title: "Event details",
       rows: [
+        ["Request code", requestCode],
         ["Event type", event],
         ["Requested date (New York)", date],
         ["Requested start time", timeLabel.format(Date.parse(details.startsAt))],
@@ -143,7 +148,7 @@ export function buildCateringRequestEmail(details: CateringRequest, audience: "s
 </html>`;
 
   return {
-    subject: `${title} · ${event} · ${details.date}`,
+    subject: `[${requestCode}] ${event} · ${forGuest ? "Request received" : details.date}`,
     replyTo: forGuest ? CATERING_ADDRESS : details.email,
     text,
     html,

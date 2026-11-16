@@ -110,7 +110,7 @@ export function CateringRequestDialog({ eventType, onClose }: { eventType: Event
   const [startsAt, setStartsAt] = useState("");
   const [earliestStart, setEarliestStart] = useState(() => Date.now() + advanceNoticeMs);
   const [review, setReview] = useState<CateringRequest | null>(null);
-  const [sent, setSent] = useState<{ receiptSent?: boolean } | null>(null);
+  const [sent, setSent] = useState<{ receiptSent?: boolean; requestCode?: string } | null>(null);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
   const [deliveryFailed, setDeliveryFailed] = useState(false);
@@ -391,6 +391,11 @@ export function CateringRequestDialog({ eventType, onClose }: { eventType: Event
             <StatusMessage kind="info">
               We couldn’t send a receipt email. Your request is still pending review.
             </StatusMessage>
+          )}
+          {sent?.requestCode && (
+            <p className="text-sm text-ink/80">
+              Request code <strong>{sent.requestCode}</strong>
+            </p>
           )}
           {!sent && (
             <p className="text-ink/75">Send your request to the catering team to confirm availability.</p>

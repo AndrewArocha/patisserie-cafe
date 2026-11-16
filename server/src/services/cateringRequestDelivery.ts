@@ -57,10 +57,13 @@ async function sendCateringEmail(to: string, email: ReturnType<typeof buildCater
   if (!delivery.accepted.length) throw new Error("The mail server rejected the catering recipient.");
 }
 
-export async function sendCateringRequestEmail(details: CateringRequest) {
-  await sendCateringEmail(environment.CATERING_REQUEST_EMAIL, buildCateringRequestEmail(details));
+export async function sendCateringRequestEmail(details: CateringRequest, requestCode: string) {
+  await sendCateringEmail(
+    environment.CATERING_REQUEST_EMAIL,
+    buildCateringRequestEmail(details, requestCode),
+  );
 }
 
-export async function sendCateringReceipt(details: CateringRequest) {
-  await sendCateringEmail(details.email, buildCateringRequestEmail(details, "guest"));
+export async function sendCateringReceipt(details: CateringRequest, requestCode: string) {
+  await sendCateringEmail(details.email, buildCateringRequestEmail(details, requestCode, "guest"));
 }
