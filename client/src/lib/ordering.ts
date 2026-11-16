@@ -11,4 +11,5 @@ function readSpotOnOrderUrl(value?: string) {
   return null;
 }
 
-export const spotOnOrderUrl = readSpotOnOrderUrl(import.meta.env.VITE_SPOTON_ORDER_URL);
+export const spotOnOrderUrl =
+  readSpotOnOrderUrl(import.meta.env.VITE_SPOTON_ORDER_URL) ?? "https://order.spoton.com/BL-3BDB-55EA-D06E";

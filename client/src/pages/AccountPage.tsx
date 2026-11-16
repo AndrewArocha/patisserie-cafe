@@ -158,13 +158,16 @@ export function AccountPage() {
             <div>
               <p className="eyebrow">For your next gathering</p>
               <h2>
-                Your <em>orders.</em>
+                Previous <em>café orders.</em>
               </h2>
             </div>
-            <Link className="text-arrow text-arrow-coral" to="/menu">
-              Order something lovely <span>→</span>
+            <Link className="text-arrow text-arrow-coral" to="/order">
+              Order online <span>→</span>
             </Link>
           </div>
+          <p className="mb-4! text-ink/75">
+            For new orders, check your SpotOn confirmation email for details.
+          </p>
           {ordersLoading ? (
             <LoadingState label="Fetching your order history…" />
           ) : ordersMessage && !orders.length ? (
@@ -189,7 +192,7 @@ export function AccountPage() {
                       {new Intl.DateTimeFormat("en-US", { dateStyle: "medium" }).format(
                         new Date(order.createdAt),
                       )}{" "}
-                      · {order.status}
+                      · {order.status === "pending" ? "Unpaid" : "Paid"}
                     </span>
                   </div>
                   <p>
@@ -213,7 +216,7 @@ export function AccountPage() {
             </div>
           ) : (
             <div className="empty-history">
-              <span>No orders yet. Your first favorite is waiting.</span>
+              <span>No previous café orders.</span>
               <Link to="/menu" className="text-arrow text-arrow-coral">
                 Browse the menu <span>→</span>
               </Link>

@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { spotOnOrderUrl } from "../lib/ordering";
 import { CATERING_PHONE, STORE_PHONE } from "../lib/contact";
 
 export function SiteFooter() {
@@ -26,11 +25,13 @@ export function SiteFooter() {
             New York, NY 10025
           </a>
           <div>
-                    <span className="footer-label">Follow us</span> <br/>
-          <Link to="https://www.instagram.com/pattiserie_nyc?exln=bGh3eXZ6ZDloMGNt&utm_source=qr">Instagram</Link>
+            <span className="footer-label">Follow us</span> <br />
+            <Link to="https://www.instagram.com/pattiserie_nyc?exln=bGh3eXZ6ZDloMGNt&utm_source=qr">
+              Instagram
+            </Link>
           </div>
         </div>
-          
+
         <div>
           <span className="footer-label">Say bonjour</span>
           <a href={STORE_PHONE.href}>Store: {STORE_PHONE.label}</a>
@@ -43,14 +44,9 @@ export function SiteFooter() {
           <Link to="/menu">Our menu</Link>
           <Link to="/catering">Catering</Link>
           <Link to="/about">About us</Link>
-          {spotOnOrderUrl ? (
-            <a href={spotOnOrderUrl}>Order online</a>
-          ) : (
-            <Link to="/order">Order online</Link>
-          )}
+          <Link to="/order">Order online</Link>
         </div>
-        <div>
-        </div>
+        <div></div>
       </div>
       <div className="footer-bottom">
         <span>© {new Date().getFullYear()} Patisserie Café</span>

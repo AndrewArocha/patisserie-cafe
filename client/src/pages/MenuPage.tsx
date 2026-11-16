@@ -1,8 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { StatusMessage } from "../components/StatusMessage";
-import { useCart } from "../context/CartContext";
 import { CATERING_PHONE } from "../lib/contact";
 import {
   categories,
@@ -12,8 +10,6 @@ import {
   ROOM_RENTAL_RATE,
   type MenuSizeOption,
 } from "../lib/menu";
-import { spotOnOrderUrl } from "../lib/ordering";
-import type { MenuItem } from "../types";
 
 function RotatingMenuPhoto({ photos, name }: { photos: string[]; name: string }) {
   const frame = useRef<HTMLDivElement>(null);
@@ -60,63 +56,6 @@ function RotatingMenuPhoto({ photos, name }: { photos: string[]; name: string })
   );
 }
 
-function MenuOptionPicker({
-  groupId,
-  groupName,
-  optionLabel = "Size",
-  sizes,
-  onAdd,
-}: {
-  groupId: string;
-  groupName: string;
-  optionLabel?: string;
-  sizes: MenuSizeOption[];
-  onAdd: (item: MenuItem) => void;
-}) {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const selected = sizes[selectedIndex].item;
-
-  return (
-    <>
-      <p>{selected.description}</p>
-      <fieldset className="mb-3 min-w-0">
-        <legend className="mb-2 text-sm font-semibold text-ink">
-          <span className="sr-only">{groupName} </span>
-          {optionLabel}
-        </legend>
-        <div className={`grid gap-1.5 ${sizes.length === 2 ? "grid-cols-2" : "grid-cols-3"}`}>
-          {sizes.map(({ item, label, detail }, index) => (
-            <label key={item.id} className="cursor-pointer">
-              <input
-                className="peer sr-only"
-                type="radio"
-                name={`${groupId}-option`}
-                value={item.id}
-                checked={index === selectedIndex}
-                onChange={() => setSelectedIndex(index)}
-              />
-              <span className="grid justify-items-center border border-ink/15 px-1 py-2 text-center text-sm leading-tight peer-checked:border-ink peer-checked:bg-ink/5 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ink">
-                <span className="font-semibold">{label}</span>
-                <span>{detail}</span>
-                <span className="mt-1 font-semibold tabular-nums">{money(item.price)}</span>
-              </span>
-            </label>
-          ))}
-        </div>
-      </fieldset>
-      <div className="menu-card-footer">
-        <button
-          className="ml-auto"
-          onClick={() => onAdd(selected)}
-          aria-label={`Add ${selected.name} to order`}
-        >
-          Add to order <span aria-hidden="true">＋</span>
-        </button>
-      </div>
-    </>
-  );
-}
-
 function MenuOptionPrices({
   sizes,
   optionLabel = "Size",
@@ -145,17 +84,10 @@ function MenuOptionPrices({
 
 export function MenuPage() {
   const [category, setCategory] = useState<string>("All");
-  const [message, setMessage] = useState("");
   const items = useMemo(
     () => (category === "All" ? MENU_ITEMS : MENU_ITEMS.filter((item) => item.category === category)),
     [category],
   );
-  const { addItem } = useCart();
-  const addToOrder = (item: MenuItem) => {
-    addItem(item);
-    setMessage(`${item.name} added to your bag.`);
-  };
-
   return (
     <main>
       <section className="menu-hero page-hero">
@@ -197,14 +129,12 @@ export function MenuPage() {
             apply.
           </p>
         </div>
-        {spotOnOrderUrl && (
-          <div className="mb-5 flex flex-wrap items-center justify-between gap-3 border-y border-ink/15 bg-cream p-4">
-            <p>Choose your items and check out on SpotOn.</p>
-            <a className="button button-navy" href={spotOnOrderUrl}>
-              Start your order <span aria-hidden="true">↗</span>
-            </a>
-          </div>
-        )}
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3 border-y border-ink/15 bg-cream p-4">
+          <p>Choose your items and check out on SpotOn.</p>
+          <Link className="button button-navy" to="/order">
+            Order online <span aria-hidden="true">↗</span>
+          </Link>
+        </div>
         <div className="category-tabs" role="tablist" aria-label="Menu categories">
           {categories.map((name) => (
             <button
@@ -218,7 +148,6 @@ export function MenuPage() {
             </button>
           ))}
         </div>
-        {message && <StatusMessage kind="success">{message}</StatusMessage>}
         <div className="menu-grid">
           {items.map((item, index) => {
             const hasSizes = "sizes" in item;
@@ -246,47 +175,27 @@ export function MenuPage() {
                       <strong>{item.price === null ? "Call for pricing" : money(item.price)}</strong>
                     )}
                   </div>
-                  {hasSizes && !spotOnOrderUrl ? (
-                    <MenuOptionPicker
-                      groupId={item.id}
-                      groupName={item.name}
-                      optionLabel={item.optionLabel}
-                      sizes={item.sizes}
-                      onAdd={addToOrder}
-                    />
+                  <p>{item.description}</p>
+                  {hasSizes ? (
+                    <MenuOptionPrices sizes={item.sizes} optionLabel={item.optionLabel} />
                   ) : (
-                    <>
-                      <p>{item.description}</p>
-                      {hasSizes ? (
-                        <MenuOptionPrices sizes={item.sizes} optionLabel={item.optionLabel} />
-                      ) : (
-                        <div className="menu-card-footer">
-                          <span>{item.unit}</span>
-                          {item.price === null ? (
-                            <a href={CATERING_PHONE.href}>
-                              Call to order <span>↗</span>
-                            </a>
-                          ) : (
-                            !spotOnOrderUrl && (
-                              <button onClick={() => addToOrder(item)}>
-                                Add to order <span>＋</span>
-                              </button>
-                            )
-                          )}
-                        </div>
+                    <div className="menu-card-footer">
+                      <span>{item.unit}</span>
+                      {item.price === null && (
+                        <a href={CATERING_PHONE.href}>
+                          Ask about pricing <span aria-hidden="true">↗</span>
+                        </a>
                       )}
-                    </>
+                    </div>
                   )}
                 </div>
               </motion.article>
             );
           })}
         </div>
-        {spotOnOrderUrl && (
-          <a className="button button-navy mt-8" href={spotOnOrderUrl}>
-            Order on SpotOn <span aria-hidden="true">↗</span>
-          </a>
-        )}
+        <Link className="button button-navy mt-8" to="/order">
+          Order online <span aria-hidden="true">↗</span>
+        </Link>
         <div className="menu-bottom-note">
           <span className="tiny-spark" aria-hidden="true">
             ✳

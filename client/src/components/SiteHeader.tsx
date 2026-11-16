@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { useCart } from "../context/CartContext";
 import { useCurrentUser } from "../context/CurrentUserContext";
 import { STORE_PHONE } from "../lib/contact";
-import { spotOnOrderUrl } from "../lib/ordering";
 import { StatusMessage } from "./StatusMessage";
 
 const navItems = [
@@ -15,7 +13,6 @@ const navItems = [
 
 export function SiteHeader() {
   const { currentUser, isSessionLoading, sessionMessage, signOut } = useCurrentUser();
-  const { cartCount } = useCart();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const closeMobile = () => setIsMenuOpen(false);
@@ -71,18 +68,9 @@ export function SiteHeader() {
               Sign in
             </NavLink>
           )}
-          {spotOnOrderUrl ? (
-            <a className="button button-navy nav-order" href={spotOnOrderUrl} onClick={closeMobile}>
-              Order online{" "}
-              <span className="cart-badge" aria-hidden="true">
-                ↗
-              </span>
-            </a>
-          ) : (
-            <Link className="button button-navy nav-order" to="/order" onClick={closeMobile}>
-              Order online <span className="cart-badge">{cartCount || "↗"}</span>
-            </Link>
-          )}
+          <Link className="button button-navy nav-order" to="/order" onClick={closeMobile}>
+            Order online <span aria-hidden="true">↗</span>
+          </Link>
         </nav>
       </div>
       {!currentUser &&

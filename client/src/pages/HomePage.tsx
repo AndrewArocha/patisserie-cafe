@@ -1,12 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { STORE_PHONE } from "../lib/contact";
-import { spotOnOrderUrl } from "../lib/ordering";
 import { findMenuItem, money } from "../lib/menu";
-import { useCart } from "../context/CartContext";
-import { StatusMessage } from "../components/StatusMessage";
-import { useState } from "react";
-import type { MenuItem } from "../types";
 
 const fadeUp = { hidden: { opacity: 0, y: 22 }, visible: { opacity: 1, y: 0 } };
 const highlights = ["lunch_small", "seasonal_fruit", "bagels_large"]
@@ -14,14 +9,6 @@ const highlights = ["lunch_small", "seasonal_fruit", "bagels_large"]
   .filter((item) => item !== undefined);
 
 export function HomePage() {
-  const { addItem } = useCart();
-  const [message, setMessage] = useState("");
-
-  const addFavorite = (item: MenuItem) => {
-    addItem(item);
-    setMessage(`${item.name} added to your bag.`);
-  };
-
   return (
     <main>
       <section className="hero-section">
@@ -214,7 +201,6 @@ export function HomePage() {
             See the whole menu <span>→</span>
           </Link>
         </div>
-        {message && <StatusMessage kind="success">{message}</StatusMessage>}
         <div className="favorite-grid">
           {highlights.map((item, index) => (
             <motion.article
@@ -228,11 +214,6 @@ export function HomePage() {
               <div className="favorite-photo">
                 <img src={item.image ?? "/images/caprese-salad.png"} alt={item.name} />
                 <span className="favorite-number">0{index + 1}</span>
-                {!spotOnOrderUrl && (
-                  <button onClick={() => addFavorite(item)} aria-label={`Add ${item.name} to order`}>
-                    ＋
-                  </button>
-                )}
               </div>
               <div className="favorite-meta">
                 <div>

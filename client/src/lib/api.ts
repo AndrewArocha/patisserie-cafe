@@ -76,17 +76,6 @@ export const api = {
   currentUser: () => request<UserResponse>("/users/me"),
   deleteAccount: () => request<{ message: string }>("/users/me", { method: "DELETE" }),
   orders: () => request<{ orders: ApiOrder[] }>("/orders"),
-  createOrder: (items: Array<{ itemId: string; quantity: number }>) =>
-    request<{ order: ApiOrder }>("/orders", { method: "POST", body: JSON.stringify({ items }) }),
   deleteOrder: (id: string) =>
     request<{ message: string }>(`/orders/${encodeURIComponent(id)}`, { method: "DELETE" }),
-  checkout: (orderId: string) =>
-    request<{ checkoutUrl: string | null }>("/payments/checkout", {
-      method: "POST",
-      body: JSON.stringify({ orderId }),
-    }),
-  confirmCheckout: (sessionId: string) =>
-    request<{ status: "pending" | "paid"; message: string }>(
-      `/payments/sessions/${encodeURIComponent(sessionId)}`,
-    ),
 };

@@ -15,10 +15,7 @@ const environmentSchema = z.object({
   JWT_SECRET: z.string().min(32, "JWT_SECRET must contain at least 32 characters."),
   JWT_EXPIRES_IN: z.string().default(DEFAULT_JWT_EXPIRY),
   PASSWORD_MIN_LENGTH: z.coerce.number().int().min(10).default(DEFAULT_PASSWORD_MIN_LENGTH),
-  CHECKOUT_PROVIDER: z.enum(["stripe", "spoton"]).default("stripe"),
   STRIPE_SECRET_KEY: z.string().optional(),
-  STRIPE_SUCCESS_URL: z.string().url().default("http://localhost:5173/order?checkout=success"),
-  STRIPE_CANCEL_URL: z.string().url().default("http://localhost:5173/order?checkout=cancel"),
   SMTP_HOST: z.string().optional(),
   SMTP_PORT: z.coerce.number().int().positive().default(587),
   SMTP_SECURE: z
