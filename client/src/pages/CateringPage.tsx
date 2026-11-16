@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { CateringRequestDialog } from "../components/CateringRequestDialog";
-import { cateringEvents, type EventType } from "../lib/catering";
+import { advanceNotice, cateringEvents, type EventType } from "../lib/catering";
 import { CATERING_EMAIL } from "../lib/contact";
 import { ROOM_RENTAL_RATE } from "../lib/menu";
 
@@ -93,6 +93,7 @@ export function CateringEventsPage() {
       </header>
 
       <section className="about-shell py-12 sm:py-16" aria-label="Event options">
+        <p className="mb-5! font-semibold text-ink/85">{advanceNotice}</p>
         <div className="grid gap-4 md:grid-cols-3 lg:gap-6">
           {eventTypes.map((type) => {
             const event = cateringEvents[type];

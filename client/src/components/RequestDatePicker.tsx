@@ -1,6 +1,6 @@
 import { useId, useRef, useState } from "react";
+import { advanceNoticeMs, getRequestStartTimes, newYorkDate } from "../lib/catering";
 
-const nyDate = new Intl.DateTimeFormat("sv-SE", { timeZone: "America/New_York", dateStyle: "short" });
 const monthLabel = new Intl.DateTimeFormat("en-US", { timeZone: "UTC", month: "long", year: "numeric" });
 const dateLabel = new Intl.DateTimeFormat("en-US", { timeZone: "UTC", dateStyle: "full" });
 const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -13,14 +13,17 @@ export function RequestDatePicker({
   value,
   onChange,
   roomRental,
+  earliestStart,
 }: {
   value: string;
   onChange: (date: string) => void;
   roomRental: boolean;
+  earliestStart: number;
 }) {
   const id = useId();
-  const today = nyDate.format(new Date());
-  const [month, setMonth] = useState(() => new Date(`${(value || today).slice(0, 7)}-01`));
+  const today = newYorkDate.format(earliestStart - advanceNoticeMs);
+  const firstDate = newYorkDate.format(earliestStart);
+  const [month, setMonth] = useState(() => new Date(`${(value || firstDate).slice(0, 7)}-01`));
   const [open, setOpen] = useState(false);
   const trigger = useRef<HTMLButtonElement>(null);
   const year = month.getUTCFullYear();
@@ -61,7 +64,7 @@ export function RequestDatePicker({
           <button
             type="button"
             aria-label="Previous month"
-            disabled={month.toISOString().slice(0, 7) <= today.slice(0, 7)}
+            disabled={month.toISOString().slice(0, 7) <= firstDate.slice(0, 7)}
             className="min-h-10 min-w-10 cursor-pointer hover:bg-blush disabled:cursor-default disabled:opacity-35"
             onClick={() => shiftMonth(-1)}
           >
@@ -90,7 +93,10 @@ export function RequestDatePicker({
             const day = new Date(Date.UTC(year, monthIndex, index + 1));
             const isoDate = day.toISOString().slice(0, 10);
             const available =
-              isoDate >= today && (!roomRental || (day.getUTCDay() >= 1 && day.getUTCDay() <= 4));
+              (!roomRental || (day.getUTCDay() >= 1 && day.getUTCDay() <= 4)) &&
+              (isoDate > firstDate ||
+                (isoDate === firstDate &&
+                  getRequestStartTimes(isoDate, roomRental).some((time) => time >= earliestStart)));
             return (
               <button
                 key={isoDate}

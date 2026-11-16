@@ -1,8 +1,12 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { api } from "../lib/api";
+import { api, ApiError } from "../lib/api";
 import {
+  advanceNotice,
+  advanceNoticeMs,
   cateringEvents,
   cateringServices,
+  getRequestStartTimes,
+  newYorkTime,
   rentalRefreshments,
   type CateringRequest,
   type EventType,
@@ -41,6 +45,7 @@ function requestRows(details: CateringRequest) {
   const rows = [
     ["Event", cateringEvents[details.eventType].requestTitle],
     ["Date", formatRequestDate(details.date)],
+    ["Start time", newYorkTime.format(Date.parse(details.startsAt))],
     ["Guests", details.guests],
     ["Name", details.name],
     ["Phone", `+1 ${formatPhone(details.phone.slice(2))}`],
@@ -102,14 +107,21 @@ export function CateringRequestDialog({ eventType, onClose }: { eventType: Event
   const summaryHeading = useRef<HTMLHeadingElement>(null);
   const [phone, setPhone] = useState("");
   const [date, setDate] = useState("");
+  const [startsAt, setStartsAt] = useState("");
+  const [earliestStart, setEarliestStart] = useState(() => Date.now() + advanceNoticeMs);
   const [review, setReview] = useState<CateringRequest | null>(null);
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
+  const [deliveryFailed, setDeliveryFailed] = useState(false);
   const roomRental = eventType !== "full-service";
+  const startTimes = date ? getRequestStartTimes(date, roomRental) : [];
+  const startExpired = startsAt !== "" && Date.parse(startsAt) < earliestStart;
 
   useEffect(() => {
     if (dialog.current && !dialog.current.open) dialog.current.showModal();
+    const timer = window.setInterval(() => setEarliestStart(Date.now() + advanceNoticeMs), 15_000);
+    return () => window.clearInterval(timer);
   }, []);
 
   useEffect(() => {
@@ -123,6 +135,10 @@ export function CateringRequestDialog({ eventType, onClose }: { eventType: Event
       setError(phone.length !== 10 ? "Enter a 10-digit phone number." : "Choose a date for your event.");
       return;
     }
+    if (!startsAt || Date.parse(startsAt) < Date.now() + advanceNoticeMs) {
+      setError(startsAt ? advanceNotice : "Choose a start time for your event.");
+      return;
+    }
     const values = new FormData(event.currentTarget);
     const details = {
       name: String(values.get("name")).trim(),
@@ -130,6 +146,7 @@ export function CateringRequestDialog({ eventType, onClose }: { eventType: Event
       phone: `+1${phone}`,
       guests: Number(values.get("guests")),
       date,
+      startsAt,
     };
     if (!details.name) {
       setError("Enter your name.");
@@ -155,11 +172,17 @@ export function CateringRequestDialog({ eventType, onClose }: { eventType: Event
   const sendRequest = async () => {
     if (!review || sending) return;
     setError("");
+    setDeliveryFailed(false);
+    if (Date.parse(review.startsAt) < Date.now() + advanceNoticeMs) {
+      setError(advanceNotice);
+      return;
+    }
     setSending(true);
     try {
       await api.requestCatering(review);
       setSent(true);
     } catch (failure) {
+      setDeliveryFailed(!(failure instanceof ApiError) || failure.status === 0 || failure.status >= 500);
       setError(
         failure instanceof Error ? failure.message : "We couldn’t send your request. Please try again.",
       );
@@ -197,6 +220,7 @@ export function CateringRequestDialog({ eventType, onClose }: { eventType: Event
           ? "Up to 60 guests · Monday–Thursday, 9:00 am–5:00 pm"
           : "Up to 60 guests · Request availability"}
       </p>
+      <p className="mt-2! text-sm font-semibold">{advanceNotice}</p>
 
       <form className="mt-5" hidden={review !== null} onSubmit={reviewRequest}>
         <div className="grid gap-4 sm:grid-cols-2">
@@ -265,8 +289,42 @@ export function CateringRequestDialog({ eventType, onClose }: { eventType: Event
             </span>
           </label>
           <div className="sm:col-span-2">
-            <RequestDatePicker value={date} onChange={setDate} roomRental={roomRental} />
+            <RequestDatePicker
+              value={date}
+              onChange={(nextDate) => {
+                if (nextDate !== date) setStartsAt("");
+                setDate(nextDate);
+                setError("");
+              }}
+              roomRental={roomRental}
+              earliestStart={earliestStart}
+            />
           </div>
+          <label className={`${fieldGroup} sm:col-span-2`}>
+            Start time (New York)
+            <select
+              className={`${field} disabled:opacity-60`}
+              value={startExpired ? "" : startsAt}
+              onChange={(event) => {
+                setStartsAt(event.target.value);
+                setError("");
+              }}
+              disabled={!date}
+              required
+            >
+              <option value="" disabled>
+                {date ? "Choose a start time" : "Choose a date first"}
+              </option>
+              {startTimes.map((time) => {
+                const value = new Date(time).toISOString();
+                return (
+                  <option key={value} value={value} disabled={time < earliestStart}>
+                    {newYorkTime.format(time)}
+                  </option>
+                );
+              })}
+            </select>
+          </label>
         </div>
         {roomRental ? (
           <fieldset className="mt-5 border-t border-ink/15 pt-3">
@@ -308,7 +366,9 @@ export function CateringRequestDialog({ eventType, onClose }: { eventType: Event
             </div>
           </fieldset>
         )}
-        {error && !review && <StatusMessage kind="error">{error}</StatusMessage>}
+        {!review && (error || startExpired) && (
+          <StatusMessage kind="error">{error || "Choose a later date or start time."}</StatusMessage>
+        )}
         <div className="mt-5 flex justify-end">
           <button type="submit" className="button button-navy">
             Review request <span aria-hidden="true">→</span>
@@ -328,24 +388,26 @@ export function CateringRequestDialog({ eventType, onClose }: { eventType: Event
             <p className="text-ink/75">Send your request to the catering team to confirm availability.</p>
           )}
           <RequestSummary details={review} />
-          {error && (
+          {!sent && (error || startExpired) && (
             <div>
-              <StatusMessage kind="error">{error}</StatusMessage>
-              <div className="flex flex-wrap gap-x-5 gap-y-2">
-                <a
-                  href={requestDraft(review)}
-                  data-destination="your email app"
-                  className="font-semibold text-terracotta! underline underline-offset-3"
-                >
-                  Open email draft
-                </a>
-                <a
-                  href={CATERING_PHONE.href}
-                  className="font-semibold text-terracotta! underline underline-offset-3"
-                >
-                  Call catering {CATERING_PHONE.label}
-                </a>
-              </div>
+              <StatusMessage kind="error">{error || "Choose a later date or start time."}</StatusMessage>
+              {deliveryFailed && !startExpired && (
+                <div className="flex flex-wrap gap-x-5 gap-y-2">
+                  <a
+                    href={requestDraft(review)}
+                    data-destination="your email app"
+                    className="font-semibold text-terracotta! underline underline-offset-3"
+                  >
+                    Open email draft
+                  </a>
+                  <a
+                    href={CATERING_PHONE.href}
+                    className="font-semibold text-terracotta! underline underline-offset-3"
+                  >
+                    Call catering {CATERING_PHONE.label}
+                  </a>
+                </div>
+              )}
             </div>
           )}
           <div className="flex flex-wrap justify-end gap-3">
@@ -369,7 +431,7 @@ export function CateringRequestDialog({ eventType, onClose }: { eventType: Event
                 <button
                   type="button"
                   className="button button-navy"
-                  disabled={sending}
+                  disabled={sending || startExpired}
                   onClick={() => void sendRequest()}
                 >
                   {sending ? "Sending…" : "Send request"}

@@ -7,6 +7,12 @@ const eventNames = {
   "full-service": "Full-service catering",
 };
 const dateLabel = new Intl.DateTimeFormat("en-US", { dateStyle: "full", timeZone: "UTC" });
+const timeLabel = new Intl.DateTimeFormat("en-US", {
+  timeZone: "America/New_York",
+  hour: "numeric",
+  minute: "2-digit",
+  timeZoneName: "short",
+});
 const htmlCharacters: Record<string, string> = {
   "&": "&amp;",
   "<": "&lt;",
@@ -49,6 +55,7 @@ export function buildCateringRequestEmail(details: CateringRequest) {
       rows: [
         ["Event type", event],
         ["Requested date (New York)", date],
+        ["Requested start time", timeLabel.format(Date.parse(details.startsAt))],
         ["Guest count", String(details.guests)],
       ],
     },
