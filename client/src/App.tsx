@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Link, Outlet, useLocation, type RouteObject } from "react-router-dom";
 import { NavigationPrompts } from "./components/NavigationPrompts";
+import { SearchMetadata } from "./components/SearchMetadata";
 import { SiteFooter } from "./components/SiteFooter";
 import { SiteHeader } from "./components/SiteHeader";
 import { AboutPage } from "./pages/AboutPage";
@@ -44,6 +45,7 @@ export function App() {
 
   return (
     <NavigationPrompts>
+      <SearchMetadata />
       <SiteHeader />
       <Outlet />
       <SiteFooter />

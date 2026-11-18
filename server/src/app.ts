@@ -7,6 +7,7 @@ import { authenticate } from "./middleware/authenticate.js";
 import { errorHandler, notFoundHandler } from "./middleware/errors.js";
 import { authRoutes } from "./routes/authRoutes.js";
 import { cateringRoutes } from "./routes/cateringRoutes.js";
+import { cateringReviewWebhook } from "./routes/cateringReviewWebhook.js";
 import { healthRoutes } from "./routes/healthRoutes.js";
 import { orderRoutes } from "./routes/orderRoutes.js";
 import { paymentRoutes } from "./routes/paymentRoutes.js";
@@ -17,6 +18,11 @@ app.disable("x-powered-by");
 app.set("trust proxy", 1);
 app.use(helmet());
 app.use(cors({ origin: environment.CLIENT_ORIGIN, credentials: false }));
+app.post(
+  `${API_PREFIX}/catering/review-email`,
+  express.raw({ type: "application/json", limit: "256kb" }),
+  cateringReviewWebhook,
+);
 app.use(express.json({ limit: "16kb" }));
 
 app.use(API_PREFIX, healthRoutes);

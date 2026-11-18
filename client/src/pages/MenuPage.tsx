@@ -100,7 +100,10 @@ export function MenuPage() {
             <br />
             <em>are on the menu.</em>
           </h1>
-          <p>Handcrafted with a little French flair and a lot of neighborhood love.</p>
+          <p>
+            Kosher breakfast, fresh salads, soups, sandwiches, and catering favorites, made with French flair
+            on New York City’s Upper West Side.
+          </p>
         </div>
         <div className="menu-hero-image">
           <img

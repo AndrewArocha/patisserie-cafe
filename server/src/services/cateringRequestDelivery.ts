@@ -4,7 +4,38 @@ import type { CateringRequest } from "../validators/cateringSchemas.js";
 import { buildCateringRequestEmail } from "./cateringRequestEmail.js";
 import { emailTransport } from "./emailTransport.js";
 
-async function sendCateringEmail(to: string, email: ReturnType<typeof buildCateringRequestEmail>) {
+export async function sendCateringEmail(
+  to: string,
+  email: ReturnType<typeof buildCateringRequestEmail>,
+  idempotencyKey: string,
+) {
+  if (environment.RESEND_API_KEY) {
+    const { replyTo, ...content } = email;
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${environment.RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+        "Idempotency-Key": idempotencyKey,
+      },
+      body: JSON.stringify({
+        ...content,
+        from: `Patisserie Café <${CATERING_ADDRESS}>`,
+        to: [to],
+        reply_to: replyTo,
+      }),
+      signal: AbortSignal.timeout(12_000),
+    });
+    if (!response.ok) {
+      throw Object.assign(new Error("Resend rejected the catering email."), {
+        code: `RESEND_HTTP_${response.status}`,
+      });
+    }
+    const result = (await response.json()) as { id?: string };
+    if (!result.id) throw new Error("Resend did not return an email ID.");
+    return result.id;
+  }
+
   const { CLOUDFLARE_EMAIL_ACCOUNT_ID: accountId, CLOUDFLARE_EMAIL_API_TOKEN: token } = environment;
 
   if (accountId && token) {
@@ -57,13 +88,22 @@ async function sendCateringEmail(to: string, email: ReturnType<typeof buildCater
   if (!delivery.accepted.length) throw new Error("The mail server rejected the catering recipient.");
 }
 
-export async function sendCateringRequestEmail(details: CateringRequest, requestCode: string) {
+export async function sendCateringRequestEmail(
+  details: CateringRequest,
+  requestCode: string,
+  links?: { accept: string; reject: string },
+) {
   await sendCateringEmail(
     environment.CATERING_REQUEST_EMAIL,
-    buildCateringRequestEmail(details, requestCode),
+    buildCateringRequestEmail(details, requestCode, "staff", links),
+    `catering/${requestCode}/staff`,
   );
 }
 
 export async function sendCateringReceipt(details: CateringRequest, requestCode: string) {
-  await sendCateringEmail(details.email, buildCateringRequestEmail(details, requestCode, "guest"));
+  await sendCateringEmail(
+    details.email,
+    buildCateringRequestEmail(details, requestCode, "guest"),
+    `catering/${requestCode}/receipt`,
+  );
 }

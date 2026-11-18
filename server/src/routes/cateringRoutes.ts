@@ -4,6 +4,8 @@ import rateLimit from "express-rate-limit";
 import { HTTP_MESSAGES } from "../config/constants.js";
 import { ApiError } from "../middleware/errors.js";
 import { validateBody } from "../middleware/validate.js";
+import { CateringOrder } from "../models/CateringOrder.js";
+import { buildCateringReviewLinks, cateringReviewEnabled } from "../services/cateringReview.js";
 import { sendCateringReceipt, sendCateringRequestEmail } from "../services/cateringRequestDelivery.js";
 import { cateringRequestSchema, type CateringRequest } from "../validators/cateringSchemas.js";
 
@@ -35,7 +37,14 @@ cateringRoutes.post(
     const requestCode = `CAT-${randomBytes(5).toString("hex").toUpperCase()}`;
 
     try {
-      await sendCateringRequestEmail(details, requestCode);
+      if (cateringReviewEnabled) {
+        await CateringOrder.create({ requestCode, details, startsAt: new Date(details.startsAt) });
+      }
+      await sendCateringRequestEmail(
+        details,
+        requestCode,
+        cateringReviewEnabled ? buildCateringReviewLinks(requestCode) : undefined,
+      );
     } catch (error) {
       logCateringDeliveryFailure("staff", error);
       throw new ApiError(503, deliveryError);

@@ -1,5 +1,6 @@
 import type { CateringRequest } from "../validators/cateringSchemas.js";
 import { CATERING_ADDRESS } from "../config/constants.js";
+import type { CateringDecision } from "../models/CateringOrder.js";
 
 const storefront = "https://www.patisseriecafe.co";
 const eventNames = {
@@ -49,12 +50,39 @@ function renderSection({ title, rows }: RequestSection) {
 export function buildCateringRequestEmail(
   details: CateringRequest,
   requestCode: string,
-  audience: "staff" | "guest" = "staff",
+  audience: "staff" | "guest" | CateringDecision = "staff",
+  reviewLinks?: { accept: string; reject: string },
 ) {
-  const forGuest = audience === "guest";
-  const title = forGuest ? "We received your catering request" : "Catering request";
   const event = eventNames[details.eventType];
   const date = dateLabel.format(new Date(details.date));
+  const time = timeLabel.format(Date.parse(details.startsAt));
+  const message = {
+    staff: {
+      title: "Catering request",
+      status: "Pending review",
+      followUp: reviewLinks
+        ? "Choose Accept or Reject, then send the prefilled email to notify the customer. Use the contact details above if you’d like to discuss the request first."
+        : "Reply to this email to contact the guest and let them know whether the request can be approved.",
+    },
+    guest: {
+      title: "We received your catering request",
+      status: "Pending review",
+      followUp:
+        "Our catering team will review your request and email you about availability. Your event is pending approval. Reply to this email with any updates or questions.",
+    },
+    accepted: {
+      title: "Your catering order has been accepted!",
+      status: "Confirmed",
+      followUp: `We look forward to your ${event.toLowerCase()} at Patisserie Café on ${date} at ${time}. Please keep this confirmation for your records. If you have questions or need to request a change, reach us at contact@patisseriecafe.co. Changes are subject to availability and confirmation by the café.`,
+    },
+    rejected: {
+      title: "An update on your catering request",
+      status: "Requested time unavailable",
+      followUp:
+        "Unfortunately, we’re at full capacity and can’t provide the service at the requested time. We may be able to accommodate a different date or time. Please reply to this email if you’d like to reschedule or modify your order so we can see what’s available.",
+    },
+  }[audience];
+  const { title, status, followUp } = message;
   const phone = details.phone.replace(/^\+1(\d{3})(\d{3})(\d{4})$/, "+1 ($1) $2-$3");
   const sections: RequestSection[] = [
     {
@@ -63,7 +91,7 @@ export function buildCateringRequestEmail(
         ["Request code", requestCode],
         ["Event type", event],
         ["Requested date (New York)", date],
-        ["Requested start time", timeLabel.format(Date.parse(details.startsAt))],
+        ["Requested start time", time],
         ["Guest count", String(details.guests)],
       ],
     },
@@ -86,14 +114,17 @@ export function buildCateringRequestEmail(
             ],
     },
   ];
-  const followUp = forGuest
-    ? "Our catering team will review your request and email you about availability. Your event is pending approval. Reply to this email with any updates or questions."
-    : "Reply to this email to contact the guest and let them know whether the request can be approved.";
+  const actions = reviewLinks
+    ? [
+        ["Accept", reviewLinks.accept],
+        ["Reject", reviewLinks.reject],
+      ]
+    : [];
 
   const text = [
     "Patisserie Café",
     title,
-    "Availability pending",
+    status,
     ...sections.flatMap(({ title, rows }) => [
       "",
       title,
@@ -101,6 +132,7 @@ export function buildCateringRequestEmail(
     ]),
     "",
     followUp,
+    ...actions.map(([label, url]) => `${label}: ${url}`),
   ].join("\n");
 
   const html = `<!doctype html>
@@ -133,10 +165,12 @@ export function buildCateringRequestEmail(
           </tr>
           <tr>
             <td style="padding:19px 20px 24px;">
-              <p style="margin:0 0 5px;color:#28476a;font-size:13px;font-weight:bold;">Availability pending</p>
+              <p style="margin:0 0 5px;color:#28476a;font-size:13px;font-weight:bold;">${status}</p>
               <h1 style="margin:0;color:#192b43;font-family:Georgia,serif;font-size:29px;line-height:1.15;">${title}</h1>
+              ${audience !== "staff" ? `<p style="line-height:1.6;">${escapeHtml(followUp)}</p>` : ""}
               ${sections.map(renderSection).join("")}
-              <p style="margin:22px 0 0;padding-top:13px;border-top:1px solid #d6e1ec;color:#28476a;font-size:14px;">${followUp}</p>
+              ${audience === "staff" ? `<p style="margin:22px 0 0;padding-top:13px;border-top:1px solid #d6e1ec;color:#28476a;font-size:14px;">${followUp}</p>` : ""}
+              ${actions.map(([label, url]) => `<a href="${escapeHtml(url)}" style="display:inline-block;margin:12px 8px 0 0;padding:10px 16px;background:#192b43;color:#fff;text-decoration:none;">${label}</a>`).join("")}
             </td>
           </tr>
         </table>
@@ -148,8 +182,18 @@ export function buildCateringRequestEmail(
 </html>`;
 
   return {
-    subject: `[${requestCode}] ${event} · ${forGuest ? "Request received" : details.date}`,
-    replyTo: forGuest ? CATERING_ADDRESS : details.email,
+    subject:
+      audience === "staff"
+        ? `Catering order #${requestCode} · ${event} · ${details.date}`
+        : `[${requestCode}] ${event} · ${title}`,
+    replyTo:
+      audience === "staff"
+        ? reviewLinks
+          ? CATERING_ADDRESS
+          : details.email
+        : audience === "accepted"
+          ? "contact@patisseriecafe.co"
+          : CATERING_ADDRESS,
     text,
     html,
   };

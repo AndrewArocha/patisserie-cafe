@@ -6,6 +6,7 @@ export const PASSWORD_RESET_TTL_MS = 30 * 60 * 1000;
 export const MAX_DATABASE_POOL_SIZE = 10;
 export const API_PREFIX = "/api";
 export const CATERING_ADDRESS = "catering@patisseriecafe.co";
+export const CATERING_REVIEW_ADDRESS = "decisions@catering-review.patisseriecafe.co";
 
 const ORDERS_PHONE = "(551) 241-8349";
 

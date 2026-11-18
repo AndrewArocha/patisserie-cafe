@@ -15,7 +15,7 @@ export function HomePage() {
         <div className="hero-copy">
           <motion.div initial="hidden" animate="visible" transition={{ staggerChildren: 0.12 }}>
             <motion.p className="eyebrow" variants={fadeUp}>
-              <span className="eyebrow-rule" /> Upper West Side · Since the early morning
+              <span className="eyebrow-rule" /> Kosher café · Upper West Side, NYC
             </motion.p>
             <motion.h1 variants={fadeUp}>
               A little Paris,
@@ -25,8 +25,8 @@ export function HomePage() {
               Amsterdam.
             </motion.h1>
             <motion.p className="hero-description" variants={fadeUp}>
-              Handcrafted French-American pastries, warm café favorites, and the kind of welcome that makes
-              you stay a little longer.
+              Kosher breakfast, handcrafted French-American pastries, coffee, and fresh salads on Manhattan’s
+              Upper West Side. Stay a little longer.
             </motion.p>
             <motion.div className="hero-actions" variants={fadeUp}>
               <Link className="button button-coral" to="/menu">
@@ -101,7 +101,10 @@ export function HomePage() {
             Some places just feel like a favorite. Where the coffee is poured with a smile, the pastry is
             still warm, and there’s always room for one more at the table.
           </p>
-          <p>That’s what we’re making here, every single day.</p>
+          <p>
+            Join us at 676 Amsterdam Avenue for breakfast, soups, salads, and sandwiches, or explore our
+            kosher catering for your next gathering in New York City.
+          </p>
           <Link to="/about" className="text-arrow text-arrow-coral">
             A little more about us <span>→</span>
           </Link>
