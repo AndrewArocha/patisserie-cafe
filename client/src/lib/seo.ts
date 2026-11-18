@@ -1,4 +1,5 @@
-export const SITE_URL = "https://patisseriecafe.co";
+// Match Vercel's permanent redirect from the apex domain to the www hostname.
+export const SITE_URL = "https://www.patisseriecafe.co";
 
 interface PageMetadata {
   title: string;
