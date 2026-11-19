@@ -50,7 +50,7 @@ export function SiteFooter() {
       </div>
       <div className="footer-bottom">
         <span>© {new Date().getFullYear()} Patisserie Café</span>
-        <span>100% Kosher · Certified by Tartikov</span>
+        <span>100% Kosher</span>
         <span>Sales tax and delivery fees may apply.</span>
       </div>
     </footer>

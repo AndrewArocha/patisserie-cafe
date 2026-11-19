@@ -21,7 +21,7 @@ export function SiteHeader() {
     <header className="site-header">
       <div className="top-note">
         <span>New York · Upper West Side</span>
-        <span>100% Kosher · Tartikov supervised</span>
+        <span>100% Kosher</span>
         <a href={STORE_PHONE.href}>{STORE_PHONE.label}</a>
       </div>
       <div className="nav-wrap">

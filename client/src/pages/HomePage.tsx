@@ -120,7 +120,7 @@ export function HomePage() {
           <h2>
             100% <em>Kosher.</em>
           </h2>
-          <p>Our café is kosher certified by Tartikov and operates under strict rabbinical supervision.</p>
+          <p>Our café is kosher certified and operates under strict supervision.</p>
           <p className="kosher-practices">Pas Yisroel · Cholov Yisroel · Yoshon</p>
           <a
             className="text-arrow text-arrow-coral"
